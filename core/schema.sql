@@ -36,7 +36,19 @@ CREATE TABLE assets (
 
 
 -- ======================================================
--- 3. Scores Table (Tracks Player's Performance)
+-- 3. Auth Tokens Table (Persistent "Remember Me" Login)
+-- ======================================================
+CREATE TABLE auth_tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    acct_id INT NOT NULL,
+    token_hash VARCHAR(64) NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (acct_id) REFERENCES accounts(acct_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ======================================================
+-- 4. Scores Table (Tracks Player's Performance)
 -- ======================================================
 CREATE TABLE scores (
     id INT AUTO_INCREMENT PRIMARY KEY,

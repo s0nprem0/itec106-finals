@@ -125,6 +125,23 @@ body {
     flex: 1;
 }
 
+.auth-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--macchiato-subtext);
+    cursor: pointer;
+    user-select: none;
+}
+
+.auth-checkbox input[type="checkbox"] {
+    accent-color: var(--macchiato-blue);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
 .auth-success {
     background-color: var(--macchiato-base);
     border: 1px solid var(--macchiato-green);

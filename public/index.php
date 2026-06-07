@@ -1,15 +1,14 @@
 <?php
 
-// 0. Start session before any session access
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 1. Pull in the core logic
 require_once __DIR__ . '/../core/database.php';
 require_once __DIR__ . '/../core/auth.php';
 
-// 2. If the user is already logged in, bypass the login screen
+Auth::tryRememberLogin($pdo);
+
 if (isset($_SESSION['acct_id'])) {
     header("Location: /itec106/game.php");
     exit;
@@ -17,20 +16,19 @@ if (isset($_SESSION['acct_id'])) {
 
 $error = '';
 
-// 3. Form Processing Logic
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $remember = !empty($_POST['remember']);
 
     if ($username && $password) {
-        // Pass the procedural $pdo connection into your Auth class
-        $result = Auth::loginUser($pdo, $username, $password);
-        
+        $result = Auth::loginUser($pdo, $username, $password, $remember);
+
         if ($result === true) {
             header("Location: /itec106/game.php");
             exit;
         } else {
-            $error = $result; // "Invalid username or password."
+            $error = $result;
         }
     } else {
         $error = "Please fill in all fields.";
@@ -54,6 +52,10 @@ require_once __DIR__ . '/../views/partials/header.php';
         <form class="auth-form" method="POST" action="/itec106/index.php">
             <input class="auth-input" type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
             <input class="auth-input" type="password" name="password" placeholder="Password" required>
+            <label class="auth-checkbox">
+                <input type="checkbox" name="remember" value="1">
+                <span>Remember me for 30 days</span>
+            </label>
             <button type="submit" class="btn btn-blue">Sign In</button>
         </form>
 
