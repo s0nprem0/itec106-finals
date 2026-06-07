@@ -5,7 +5,8 @@ require_once __DIR__ . '/../core/auth.php';
 
 requirePermission($pdo, 'admin.access');
 
-$success_msg = '';
+$flash = $_SESSION['flash'] ?? null;
+unset($_SESSION['flash']);
 $error_msg = '';
 
 $tab = $_GET['tab'] ?? 'assets';
@@ -50,9 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($new_price !== false && $new_price > 0) {
             try {
+                $stmt = $pdo->prepare("SELECT item_name FROM assets WHERE id = ?");
+                $stmt->execute([$asset_id]);
+                $name = $stmt->fetchColumn();
                 $stmt = $pdo->prepare("UPDATE assets SET price = :price WHERE id = :id");
                 $stmt->execute([':price' => $new_price, ':id' => $asset_id]);
-                $success_msg = "Asset pricing updated successfully.";
+                $_SESSION['flash'] = ['type' => 'success', 'text' => "Price updated for " . ($name ?: "asset #$asset_id") . "."];
+                session_write_close();
+                header("Location: " . BASE_URL . "/admin.php?tab=" . urlencode($tab));
+                exit;
             } catch (PDOException $e) {
                 $error_msg = "Database Error: Unable to update asset.";
             }
@@ -75,12 +82,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($asset_id) {
                     $stmt = $pdo->prepare("UPDATE assets SET item_name = ?, category = ?, price = ?, image_url = ? WHERE id = ?");
                     $stmt->execute([$name, $category, $price, $image_url ?: null, $asset_id]);
-                    $success_msg = "Asset updated successfully.";
+                    $_SESSION['flash'] = ['type' => 'success', 'text' => "Asset \"$name\" updated."];
                 } else {
                     $stmt = $pdo->prepare("INSERT INTO assets (item_name, category, price, image_url) VALUES (?, ?, ?, ?)");
                     $stmt->execute([$name, $category, $price, $image_url ?: null]);
-                    $success_msg = "New asset added to the database.";
+                    $_SESSION['flash'] = ['type' => 'success', 'text' => "New asset \"$name\" added."];
                 }
+                session_write_close();
+                header("Location: " . BASE_URL . "/admin.php?tab=" . urlencode($tab));
+                exit;
             } catch (PDOException $e) {
                 $error_msg = "Database Error: Unable to save asset.";
             }
@@ -90,11 +100,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'delete_asset' && hasPermission($pdo, 'assets.delete')) {
         $asset_id = (int)($_POST['asset_id'] ?? 0);
         try {
+            $stmt = $pdo->prepare("SELECT item_name FROM assets WHERE id = ?");
+            $stmt->execute([$asset_id]);
+            $name = $stmt->fetchColumn();
             $stmt = $pdo->prepare("DELETE FROM assets WHERE id = ?");
             $stmt->execute([$asset_id]);
-            $success_msg = "Asset removed from the database.";
+            $_SESSION['flash'] = ['type' => 'success', 'text' => "Asset \"" . ($name ?: "#$asset_id") . "\" deleted."];
+            session_write_close();
+            header("Location: " . BASE_URL . "/admin.php?tab=" . urlencode($tab));
+            exit;
         } catch (PDOException $e) {
             $error_msg = "Database Error: Unable to delete asset.";
+        }
+    }
+
+    if ($action === 'update_role' && hasPermission($pdo, 'players.edit')) {
+        $target_id = (int)($_POST['target_id'] ?? 0);
+        $new_role = $_POST['new_role'] ?? '';
+        if ($target_id && in_array($new_role, ['player', 'moderator', 'admin'])) {
+            try {
+                $stmt = $pdo->prepare("UPDATE accounts SET role = ? WHERE acct_id = ?");
+                $stmt->execute([$new_role, $target_id]);
+                $_SESSION['flash'] = ['type' => 'success', 'text' => "Player #$target_id role changed to $new_role."];
+                session_write_close();
+                header("Location: " . BASE_URL . "/admin.php?tab=" . urlencode($tab));
+                exit;
+            } catch (PDOException $e) {
+                $error_msg = "Database Error: Unable to update role.";
+            }
+        } else {
+            $error_msg = "Invalid role specified.";
         }
     }
 
@@ -103,7 +138,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $stmt = $pdo->prepare("DELETE FROM scores WHERE id = ?");
             $stmt->execute([$score_id]);
-            $success_msg = "Score record removed.";
+            $_SESSION['flash'] = ['type' => 'success', 'text' => "Score record #$score_id removed."];
+            session_write_close();
+            header("Location: " . BASE_URL . "/admin.php?tab=" . urlencode($tab));
+            exit;
         } catch (PDOException $e) {
             $error_msg = "Database Error: Unable to delete score.";
         }
@@ -199,8 +237,8 @@ require_once __DIR__ . '/../views/partials/header.php';
         <p class="admin-subtitle">Administrator Control Panel & Intelligence Dashboard</p>
     </div>
 
-    <?php if ($success_msg): ?>
-        <div class="admin-msg admin-msg-success">[&#10003;] <?= htmlspecialchars($success_msg) ?></div>
+    <?php if ($flash): ?>
+        <div class="admin-msg admin-msg-<?= $flash['type'] ?>">[<?= $flash['type'] === 'success' ? '&#10003;' : '&#33;' ?>] <?= htmlspecialchars($flash['text']) ?></div>
     <?php endif; ?>
     <?php if ($error_msg): ?>
         <div class="admin-msg admin-msg-error">[&#33;] <?= htmlspecialchars($error_msg) ?></div>
@@ -435,7 +473,19 @@ require_once __DIR__ . '/../views/partials/header.php';
                             <td class="admin-td"><?= htmlspecialchars($p['surname']) ?></td>
                             <td class="admin-td"><?= htmlspecialchars($p['email_addr']) ?></td>
                             <td class="admin-td">
+                                <?php if (hasPermission($pdo, 'players.edit') && $p['acct_id'] != $_SESSION['acct_id']): ?>
+                                <form method="POST" action="<?= BASE_URL ?>/admin.php?tab=players" style="display:flex;gap:0.25rem;align-items:center;">
+                                    <input type="hidden" name="action" value="update_role">
+                                    <input type="hidden" name="target_id" value="<?= $p['acct_id'] ?>">
+                                    <select name="new_role" class="admin-price-input" style="width:auto;padding:0.25rem 0.4rem;font-size:0.75rem;" onchange="this.form.submit()">
+                                        <option value="player" <?= $p['role'] === 'player' ? 'selected' : '' ?>>player</option>
+                                        <option value="moderator" <?= $p['role'] === 'moderator' ? 'selected' : '' ?>>moderator</option>
+                                        <option value="admin" <?= $p['role'] === 'admin' ? 'selected' : '' ?>>admin</option>
+                                    </select>
+                                </form>
+                                <?php else: ?>
                                 <span class="admin-category-badge"><?= htmlspecialchars($p['role']) ?></span>
+                                <?php endif; ?>
                             </td>
                             <td class="admin-td"><?= htmlspecialchars($p['birthdate']) ?></td>
                         </tr>

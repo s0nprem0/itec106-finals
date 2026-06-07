@@ -90,6 +90,7 @@ INSERT INTO permissions (role, permission) VALUES
 ('admin', 'assets.edit_price'),
 ('admin', 'assets.delete'),
 ('admin', 'players.view'),
+('admin', 'players.edit'),
 ('admin', 'scores.view'),
 ('admin', 'scores.delete');
 
