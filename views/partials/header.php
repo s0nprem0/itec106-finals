@@ -19,10 +19,10 @@ if (session_status() === PHP_SESSION_NONE) {
     <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
         <h1 style="color: var(--macchiato-blue); font-size: 1.5rem;">Tech Spec Showdown</h1>
         <nav>
-            <?php if (isset($_SESSION['user_id'])): ?>
+            <?php if (isset($_SESSION['acct_id'])): ?>
                 <a href="/itec106/game.php" style="color: var(--macchiato-text); margin-right: 15px; text-decoration: none;">Play</a>
                 <a href="/itec106/leaderboard.php" style="color: var(--macchiato-text); margin-right: 15px; text-decoration: none;">Leaderboard</a>
-                <?php if (!empty($_SESSION['is_admin'])): ?>
+                <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                     <a href="/itec106/admin.php" style="color: var(--macchiato-green); margin-right: 15px; text-decoration: none;">Admin</a>
                 <?php endif; ?>
                 <a href="/itec106/logout.php" style="color: var(--macchiato-red); text-decoration: none;">Logout</a>

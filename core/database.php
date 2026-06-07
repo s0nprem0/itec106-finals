@@ -1,10 +1,10 @@
 <?php
 
-// 1. Define your secure credentials
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', 'root');
-define('DB_NAME', 'itec106');
+// 1. Define secure credentials (use env vars in Docker, fallback for local dev)
+define('DB_HOST', getenv('MYSQL_HOST') ?: 'localhost');
+define('DB_USER', getenv('MYSQL_USER') ?: 'root');
+define('DB_PASS', getenv('MYSQL_PASSWORD') ?: 'root');
+define('DB_NAME', getenv('MYSQL_DATABASE') ?: 'itec106');
 
 try {
     // 2. Build the connection string
