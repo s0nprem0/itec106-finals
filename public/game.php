@@ -80,49 +80,30 @@ require_once __DIR__ . '/../views/partials/header.php';
 
 <div class="game-page">
 
-    <?php if (!empty($_SESSION['game_over'])): ?>
-        <!-- GAME OVER SCREEN -->
+<?php if (!empty($_SESSION['game_over'])): ?>
         <?php 
         $endReason = $_SESSION['game_end_reason'] ?? 'completed';
         $isCashOut = $endReason === 'cashout';
+        $finalBalance = $_SESSION['balance'] ?? 0;
         ?>
-        <?php if ($isCashOut): ?>
-        <div class="card game-over-card game-cashout-card">
-            <h1 class="game-over-title game-cashout-title">Mission Aborted</h1>
-            <p class="game-cashout-subtitle">You cashed out with $<?= number_format($_SESSION['balance'] ?? 0, 2) ?>.</p>
-        <?php elseif (!empty($_SESSION['game_won'])): ?>
-        <div class="card game-over-card game-won-card">
-            <h1 class="game-over-title game-won-title">Target Acquired</h1>
-            <p class="game-won-subtitle">You reached the $<?= number_format(WIN_TARGET) ?> target!</p>
-        <?php else: ?>
-        <div class="card game-over-card">
-            <h1 class="game-over-title">System Failure</h1>
-            <p class="game-over-desc">Your funds have been depleted. Connection terminated.</p>
-        <?php endif; ?>
-
-            <div class="game-over-stats">
-                <div class="game-over-stat">
-                    <span class="game-over-stat-label">Final Balance</span>
-                    <span class="game-over-stat-value">$<?= number_format($_SESSION['balance'] ?? 0, 2) ?></span>
+        <div class="card game-over-card <?= $isCashOut ? 'game-cashout-card' : '' ?>">
+            <?php if ($isCashOut): ?>
+                <h1 class="game-over-title game-cashout-title">Mission Aborted</h1>
+                <p class="game-cashout-subtitle">You cashed out with $<?= number_format($finalBalance, 2) ?>.</p>
+                
+            <?php elseif (!empty($_SESSION['game_won'])): ?>
+                <div class="game-won-card">
+                    <h1 class="game-over-title game-won-title">Target Acquired</h1>
+                    <p class="game-won-subtitle">You reached the $<?= number_format(WIN_TARGET) ?> target!</p>
                 </div>
-                <div class="game-over-stat">
-                    <span class="game-over-stat-label">Profit / Loss</span>
-                    <span class="game-over-stat-value <?= ($_SESSION['final_profit'] ?? 0) >= 0 ? 'game-profit-positive' : 'game-profit-negative' ?>">
-                        <?= ($_SESSION['final_profit'] ?? 0) >= 0 ? '+' : '' ?>$<?= number_format(abs($_SESSION['final_profit'] ?? 0), 2) ?>
-                    </span>
-                </div>
-                <div class="game-over-stat">
-                    <span class="game-over-stat-label">Rounds Played</span>
-                    <span class="game-over-stat-value"><?= $_SESSION['round'] ?? 0 ?></span>
-                </div>
-                <div class="game-over-stat">
-                    <span class="game-over-stat-label">Total Wagered</span>
-                    <span class="game-over-stat-value">$<?= number_format($_SESSION['total_bet'] ?? 0, 2) ?></span>
-                </div>
-            </div>
-
-            <?php if ($is_new_record): ?>
-                <p class="game-over-record">&#9733; <?= $_SESSION['game_won'] ? 'New Best Profit!' : 'New Worst Loss!' ?> &#9733;</p>
+                
+            <?php elseif ($finalBalance > 0): ?>
+                <h1 class="game-over-title" style="color: #eed49f;">Market Closed</h1>
+                <p class="game-over-desc">The 20-round trading window has closed. You survived the market, but fell short of the $<?= number_format(WIN_TARGET) ?> target.</p>
+                
+            <?php else: ?>
+                <h1 class="game-over-title" style="color: #ed8796;">System Failure</h1>
+                <p class="game-over-desc">Your funds have been completely depleted. Account liquidated.</p>
             <?php endif; ?>
 
             <div class="game-over-actions">
