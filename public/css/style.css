@@ -190,3 +190,205 @@ body {
     opacity: 0.8;
     text-decoration: underline;
 }
+
+/* ============================================
+   Game Page
+   ============================================ */
+.game-page {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.game-over-card {
+    text-align: center;
+    padding: 4rem 2rem;
+    border: 2px solid var(--macchiato-red);
+}
+
+.game-over-title {
+    color: var(--macchiato-red);
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.game-over-score {
+    color: var(--macchiato-text);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.game-over-streak {
+    color: var(--macchiato-green);
+}
+
+.game-over-desc {
+    color: var(--macchiato-subtext);
+    margin-bottom: 3rem;
+    font-size: 0.95rem;
+}
+
+.game-over-btn {
+    font-size: 1.25rem;
+    padding: 0.85rem 2rem;
+}
+
+.game-hud {
+.game-hud {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--macchiato-surface);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.game-hud-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.game-hud-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--macchiato-subtext);
+}
+
+.game-hud-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--macchiato-text);
+}
+
+.game-hearts {
+    display: flex;
+    gap: 0.25rem;
+    font-size: 1.2rem;
+}
+
+.game-heart.filled {
+    color: var(--macchiato-red);
+}
+
+.game-heart.empty {
+    color: #494d64;
+}
+
+.game-instructions {
+    background-color: var(--macchiato-surface);
+    border-left: 3px solid var(--macchiato-blue);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--macchiato-subtext);
+    line-height: 1.5;
+}
+
+.game-instructions-content strong {
+    color: var(--macchiato-text);
+}
+
+.game-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.game-asset-card {
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    padding: 2rem;
+}
+
+.game-img {
+    max-height: 180px;
+    width: auto;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    object-fit: contain;
+}
+
+.game-img-placeholder {
+    width: 100%;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--macchiato-base);
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+}
+
+.game-asset-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--macchiato-text);
+    margin-bottom: 0.5rem;
+}
+
+.game-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--macchiato-blue);
+    margin-bottom: 0.75rem;
+}
+
+.game-asset-meta {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.game-volatility {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+}
+
+.game-volatility.up {
+    background-color: rgba(166, 218, 149, 0.12);
+    color: var(--macchiato-green);
+}
+
+.game-volatility.down {
+    background-color: rgba(237, 135, 150, 0.12);
+    color: var(--macchiato-red);
+}
+
+.game-category {
+    font-size: 0.8rem;
+    color: var(--macchiato-subtext);
+    background-color: var(--macchiato-base);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+}
+
+.game-prompt {
+    font-size: 0.9rem;
+    color: var(--macchiato-subtext);
+    text-align: center;
+}
+
+.game-actions {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 440px;
+}
+
+.game-btn {
+    flex: 1;
+    padding: 0.85rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
