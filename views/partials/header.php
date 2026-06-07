@@ -22,7 +22,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <?php if (isset($_SESSION['acct_id'])): ?>
                 <a href="/itec106/game.php" class="nav-link">Play</a>
                 <a href="/itec106/leaderboard.php" class="nav-link">Leaderboard</a>
-                <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <?php if (!empty($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'moderator'])): ?>
                     <a href="/itec106/admin.php" class="nav-link nav-link-admin">Admin</a>
                 <?php endif; ?>
                 <a href="/itec106/logout.php" class="nav-link nav-link-logout">Logout</a>
