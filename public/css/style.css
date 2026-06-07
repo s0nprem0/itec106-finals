@@ -340,7 +340,9 @@ input[type="date"] {
     margin-bottom: 1.5rem;
 }
 
-.game-over-keys kbd {
+.game-over-keys kbd,
+.game-result-keys kbd,
+.game-instructions-keys kbd {
     display: inline-block;
     padding: 0.1rem 0.4rem;
     border-radius: 3px;
@@ -469,16 +471,6 @@ input[type="date"] {
     margin-bottom: 1rem;
 }
 
-.game-result-keys kbd {
-    display: inline-block;
-    padding: 0.1rem 0.4rem;
-    border-radius: 3px;
-    background-color: var(--flat-bg);
-    border: 1px solid var(--flat-border);
-    font-family: monospace;
-    font-size: 0.75rem;
-    color: var(--flat-text);
-}
 
 .game-continue-btn {
     padding: 0.75rem 2rem;
@@ -630,15 +622,6 @@ input[type="date"] {
     color: var(--flat-subtext);
 }
 
-.game-instructions-keys kbd {
-    display: inline-block;
-    padding: 0.1rem 0.4rem;
-    border-radius: 3px;
-    background-color: var(--flat-surface);
-    border: 1px solid var(--flat-border);
-    font-family: monospace;
-    font-size: 0.8rem;
-}
 
 .game-board {
     display: flex;

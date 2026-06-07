@@ -10,7 +10,7 @@ require_once __DIR__ . '/../core/auth.php';
 
 if (isset($_SESSION['acct_id'])) {
     session_write_close();
-    header("Location: /itec106/game.php");
+    header("Location: " . BASE_URL . "/game.php");
     exit;
 }
 
@@ -51,10 +51,10 @@ require_once __DIR__ . '/../views/partials/header.php';
 
         <?php if ($success): ?>
             <div class="auth-success"><?= htmlspecialchars($success) ?></div>
-            <a href="/itec106/index.php" class="btn btn-blue btn-block">Go to Login</a>
+            <a href="<?= BASE_URL ?>/index.php" class="btn btn-blue btn-block">Go to Login</a>
         <?php else: ?>
 
-            <form class="auth-form" method="POST" action="/itec106/register.php">
+            <form class="auth-form" method="POST" action="<?= BASE_URL ?>/register.php">
                 <div class="auth-row">
                     <input class="auth-input" type="text" name="first_name" placeholder="First Name" required value="<?= htmlspecialchars($_POST['first_name'] ?? '') ?>">
                     <input class="auth-input" type="text" name="surname" placeholder="Surname" required value="<?= htmlspecialchars($_POST['surname'] ?? '') ?>">
@@ -71,7 +71,7 @@ require_once __DIR__ . '/../views/partials/header.php';
         <?php endif; ?>
 
         <p class="auth-footer">
-            Already have an account? <a href="/itec106/index.php">Sign In</a>
+            Already have an account? <a href="<?= BASE_URL ?>/index.php">Sign In</a>
         </p>
     </div>
 </div>

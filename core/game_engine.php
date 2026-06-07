@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/database.php';
-require_once __DIR__ . '/auth.php';
 
 const DIFFICULTIES = [
     'easy'   => ['volatility' => 10, 'label' => 'Easy',    'desc' => '±10%'],
@@ -40,7 +39,7 @@ function initGame($pdo, $difficulty = 'medium') {
     unset($_SESSION['last_guess']);
 }
 
-function processGuess($pdo, $guess) {
+function processGuess($pdo, $guess, $acctId) {
     if (!empty($_SESSION['game_over'])) {
         return ['error' => "Game over. Please start a new game."];
     }
@@ -72,7 +71,7 @@ function processGuess($pdo, $guess) {
     if ($_SESSION['lives'] <= 0) {
         $_SESSION['game_over'] = true;
         $stmt = $pdo->prepare("INSERT INTO scores (acct_id, streak, difficulty) VALUES (?, ?, ?)");
-        $stmt->execute([$_SESSION['acct_id'], $_SESSION['score'], $_SESSION['difficulty'] ?? 'medium']);
+        $stmt->execute([$acctId, $_SESSION['score'], $_SESSION['difficulty'] ?? 'medium']);
     } else {
         $_SESSION['current_asset'] = $_SESSION['next_asset'];
         $_SESSION['next_asset'] = getRandomAsset($pdo, $_SESSION['current_asset']['id'], $config['volatility']);

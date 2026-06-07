@@ -11,7 +11,7 @@ Auth::tryRememberLogin($pdo);
 
 if (isset($_SESSION['acct_id'])) {
     session_write_close();
-    header("Location: /itec106/game.php");
+    header("Location: " . BASE_URL . "/game.php");
     exit;
 }
 
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result === true) {
             session_write_close();
-            header("Location: /itec106/game.php");
+            header("Location: " . BASE_URL . "/game.php");
             exit;
         } else {
             $error = $result;
@@ -51,7 +51,7 @@ require_once __DIR__ . '/../views/partials/header.php';
             </div>
         <?php endif; ?>
 
-        <form class="auth-form" method="POST" action="/itec106/index.php">
+        <form class="auth-form" method="POST" action="<?= BASE_URL ?>/index.php">
             <input class="auth-input" type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
             <input class="auth-input" type="password" name="password" placeholder="Password" required>
             <label class="auth-checkbox">
@@ -62,7 +62,7 @@ require_once __DIR__ . '/../views/partials/header.php';
         </form>
 
         <p class="auth-footer">
-            No account? <a href="/itec106/register.php">Register</a>
+            No account? <a href="<?= BASE_URL ?>/register.php">Register</a>
         </p>
     </div>
 </div>

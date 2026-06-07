@@ -11,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech Spec Showdown</title>
-    <link rel="stylesheet" href="/itec106/public/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/style.css">
 </head>
 <body>
 
@@ -20,14 +20,14 @@ if (session_status() === PHP_SESSION_NONE) {
         <h1 class="site-logo">Tech Spec Showdown</h1>
         <nav class="site-nav">
             <?php if (isset($_SESSION['acct_id'])): ?>
-                <a href="/itec106/game.php" class="nav-link">Play</a>
-                <a href="/itec106/leaderboard.php" class="nav-link">Leaderboard</a>
+                <a href="<?= BASE_URL ?>/game.php" class="nav-link">Play</a>
+                <a href="<?= BASE_URL ?>/leaderboard.php" class="nav-link">Leaderboard</a>
                 <?php if (!empty($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'moderator'])): ?>
-                    <a href="/itec106/admin.php" class="nav-link nav-link-admin">Admin</a>
+                    <a href="<?= BASE_URL ?>/admin.php" class="nav-link nav-link-admin">Admin</a>
                 <?php endif; ?>
-                <a href="/itec106/logout.php" class="nav-link nav-link-logout">Logout</a>
+                <a href="<?= BASE_URL ?>/logout.php" class="nav-link nav-link-logout">Logout</a>
             <?php else: ?>
-                <a href="/itec106/index.php" class="nav-link nav-link-login">Login</a>
+                <a href="<?= BASE_URL ?>/index.php" class="nav-link nav-link-login">Login</a>
             <?php endif; ?>
         </nav>
     </div>

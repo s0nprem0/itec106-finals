@@ -226,9 +226,9 @@ require_once __DIR__ . '/../views/partials/header.php';
     </div>
 
     <div class="admin-tabs">
-        <a href="/itec106/admin.php?tab=assets" class="admin-tab <?= $tab === 'assets' ? 'admin-tab-active' : '' ?>">Assets</a>
-        <a href="/itec106/admin.php?tab=players" class="admin-tab <?= $tab === 'players' ? 'admin-tab-active' : '' ?>">Players</a>
-        <a href="/itec106/admin.php?tab=scores" class="admin-tab <?= $tab === 'scores' ? 'admin-tab-active' : '' ?>">Scores</a>
+        <a href="<?= BASE_URL ?>/admin.php?tab=assets" class="admin-tab <?= $tab === 'assets' ? 'admin-tab-active' : '' ?>">Assets</a>
+        <a href="<?= BASE_URL ?>/admin.php?tab=players" class="admin-tab <?= $tab === 'players' ? 'admin-tab-active' : '' ?>">Players</a>
+        <a href="<?= BASE_URL ?>/admin.php?tab=scores" class="admin-tab <?= $tab === 'scores' ? 'admin-tab-active' : '' ?>">Scores</a>
     </div>
 
     <div class="admin-tab-content">
@@ -237,7 +237,7 @@ require_once __DIR__ . '/../views/partials/header.php';
 
         <div class="card admin-form-card">
             <h2 class="admin-form-title"><?= $edit_asset ? 'Edit Asset' : 'Add New Asset' ?></h2>
-            <form class="admin-form" method="POST" action="/itec106/admin.php?tab=assets">
+            <form class="admin-form" method="POST" action="<?= BASE_URL ?>/admin.php?tab=assets">
                 <input type="hidden" name="action" value="save_asset">
                 <?php if ($edit_asset): ?>
                     <input type="hidden" name="asset_id" value="<?= $edit_asset['id'] ?>">
@@ -273,7 +273,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <div class="admin-form-actions">
                     <button type="submit" class="btn btn-blue"><?= $edit_asset ? 'Update Asset' : 'Add Asset' ?></button>
                     <?php if ($edit_asset): ?>
-                        <a href="/itec106/admin.php?tab=assets" class="btn btn-red admin-btn">Cancel</a>
+                        <a href="<?= BASE_URL ?>/admin.php?tab=assets" class="btn btn-red admin-btn">Cancel</a>
                     <?php endif; ?>
                 </div>
             </form>
@@ -285,12 +285,12 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <p class="admin-delete-text">
                     Are you sure you want to permanently remove <strong class="admin-delete-name"><?= htmlspecialchars($delete_asset['item_name']) ?></strong> from the database?
                 </p>
-                <form method="POST" action="/itec106/admin.php?tab=assets">
+                <form method="POST" action="<?= BASE_URL ?>/admin.php?tab=assets">
                     <input type="hidden" name="action" value="delete_asset">
                     <input type="hidden" name="asset_id" value="<?= $delete_asset['id'] ?>">
                     <div class="admin-form-actions">
                         <button type="submit" class="btn btn-red">Confirm Delete</button>
-                        <a href="/itec106/admin.php?tab=assets" class="btn btn-blue admin-btn">Cancel</a>
+                        <a href="<?= BASE_URL ?>/admin.php?tab=assets" class="btn btn-blue admin-btn">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -299,12 +299,12 @@ require_once __DIR__ . '/../views/partials/header.php';
         <div class="card">
             <div class="admin-assets-header">
                 <h2 class="admin-assets-title">Hardware Asset Database</h2>
-                <form class="admin-search-form" method="GET" action="/itec106/admin.php">
+                <form class="admin-search-form" method="GET" action="<?= BASE_URL ?>/admin.php">
                     <input type="hidden" name="tab" value="assets">
                     <input class="admin-search-input" type="text" name="search" placeholder="Search assets..." value="<?= htmlspecialchars($search) ?>">
                     <button type="submit" class="btn btn-blue admin-btn">Search</button>
                     <?php if ($search): ?>
-                        <a href="/itec106/admin.php?tab=assets" class="btn btn-red admin-btn">Clear</a>
+                        <a href="<?= BASE_URL ?>/admin.php?tab=assets" class="btn btn-red admin-btn">Clear</a>
                     <?php endif; ?>
                 </form>
             </div>
@@ -318,16 +318,16 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <tr>
                         <th class="admin-th admin-th-sm"></th>
                         <th class="admin-th <?= $sort === 'id' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=assets&sort=id&dir=<?= $sort === 'id' && $dir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">ID <?= $sort === 'id' ? ($dir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=assets&sort=id&dir=<?= $sort === 'id' && $dir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">ID <?= $sort === 'id' ? ($dir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $sort === 'category' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=assets&sort=category&dir=<?= $sort === 'category' && $dir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Category <?= $sort === 'category' ? ($dir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=assets&sort=category&dir=<?= $sort === 'category' && $dir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Category <?= $sort === 'category' ? ($dir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $sort === 'item_name' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=assets&sort=item_name&dir=<?= $sort === 'item_name' && $dir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Item Name <?= $sort === 'item_name' ? ($dir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=assets&sort=item_name&dir=<?= $sort === 'item_name' && $dir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Item Name <?= $sort === 'item_name' ? ($dir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $sort === 'price' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=assets&sort=price&dir=<?= $sort === 'price' && $dir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Price <?= $sort === 'price' ? ($dir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=assets&sort=price&dir=<?= $sort === 'price' && $dir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Price <?= $sort === 'price' ? ($dir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th">Actions</th>
                     </tr>
@@ -350,7 +350,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                             </td>
                             <td class="admin-td admin-item-name"><?= htmlspecialchars($asset['item_name']) ?></td>
                             <td class="admin-td">
-                                <form class="admin-price-form" method="POST" action="/itec106/admin.php?tab=assets">
+                                <form class="admin-price-form" method="POST" action="<?= BASE_URL ?>/admin.php?tab=assets">
                                     <input type="hidden" name="action" value="update_price">
                                     <input type="hidden" name="asset_id" value="<?= $asset['id'] ?>">
                                     <span class="admin-price-dollar">$</span>
@@ -360,9 +360,9 @@ require_once __DIR__ . '/../views/partials/header.php';
                             </td>
                             <td class="admin-td">
                                 <div class="admin-actions">
-                                    <a href="/itec106/admin.php?tab=assets&edit=<?= $asset['id'] ?>" class="btn btn-green admin-btn">Edit</a>
+                                    <a href="<?= BASE_URL ?>/admin.php?tab=assets&edit=<?= $asset['id'] ?>" class="btn btn-green admin-btn">Edit</a>
                                     <?php if (hasPermission($pdo, 'assets.delete')): ?>
-                                    <a href="/itec106/admin.php?tab=assets&delete=<?= $asset['id'] ?>" class="btn btn-red admin-btn">Delete</a>
+                                    <a href="<?= BASE_URL ?>/admin.php?tab=assets&delete=<?= $asset['id'] ?>" class="btn btn-red admin-btn">Delete</a>
                                     <?php endif; ?>
                                 </div>
                             </td>
@@ -382,12 +382,12 @@ require_once __DIR__ . '/../views/partials/header.php';
         <div class="card">
             <div class="admin-assets-header">
                 <h2 class="admin-assets-title">Registered Operatives</h2>
-                <form class="admin-search-form" method="GET" action="/itec106/admin.php">
+                <form class="admin-search-form" method="GET" action="<?= BASE_URL ?>/admin.php">
                     <input type="hidden" name="tab" value="players">
                     <input class="admin-search-input" type="text" name="search" placeholder="Search players..." value="<?= htmlspecialchars($search) ?>">
                     <button type="submit" class="btn btn-blue admin-btn">Search</button>
                     <?php if ($search): ?>
-                        <a href="/itec106/admin.php?tab=players" class="btn btn-red admin-btn">Clear</a>
+                        <a href="<?= BASE_URL ?>/admin.php?tab=players" class="btn btn-red admin-btn">Clear</a>
                     <?php endif; ?>
                 </form>
             </div>
@@ -404,25 +404,25 @@ require_once __DIR__ . '/../views/partials/header.php';
                         $pdir = $_GET['dir'] ?? 'asc';
                         ?>
                         <th class="admin-th <?= $psort === 'acct_id' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=players&sort=acct_id&dir=<?= $psort === 'acct_id' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">ID <?= $psort === 'acct_id' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=players&sort=acct_id&dir=<?= $psort === 'acct_id' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">ID <?= $psort === 'acct_id' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $psort === 'username' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=players&sort=username&dir=<?= $psort === 'username' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Username <?= $psort === 'username' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=players&sort=username&dir=<?= $psort === 'username' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Username <?= $psort === 'username' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $psort === 'first_name' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=players&sort=first_name&dir=<?= $psort === 'first_name' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">First Name <?= $psort === 'first_name' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=players&sort=first_name&dir=<?= $psort === 'first_name' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">First Name <?= $psort === 'first_name' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $psort === 'surname' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=players&sort=surname&dir=<?= $psort === 'surname' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Surname <?= $psort === 'surname' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=players&sort=surname&dir=<?= $psort === 'surname' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Surname <?= $psort === 'surname' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $psort === 'email_addr' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=players&sort=email_addr&dir=<?= $psort === 'email_addr' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Email <?= $psort === 'email_addr' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=players&sort=email_addr&dir=<?= $psort === 'email_addr' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Email <?= $psort === 'email_addr' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $psort === 'role' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=players&sort=role&dir=<?= $psort === 'role' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Role <?= $psort === 'role' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=players&sort=role&dir=<?= $psort === 'role' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Role <?= $psort === 'role' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $psort === 'birthdate' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=players&sort=birthdate&dir=<?= $psort === 'birthdate' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Birthdate <?= $psort === 'birthdate' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=players&sort=birthdate&dir=<?= $psort === 'birthdate' && $pdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>">Birthdate <?= $psort === 'birthdate' ? ($pdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                     </tr>
                 </thead>
@@ -457,12 +457,12 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <p class="admin-delete-text">
                     Are you sure you want to permanently remove <strong class="admin-delete-name"><?= htmlspecialchars($delete_score['username']) ?></strong>'s streak of <strong><?= $delete_score['streak'] ?></strong> from the database?
                 </p>
-                <form method="POST" action="/itec106/admin.php?tab=scores">
+                <form method="POST" action="<?= BASE_URL ?>/admin.php?tab=scores">
                     <input type="hidden" name="action" value="delete_score">
                     <input type="hidden" name="score_id" value="<?= $delete_score['id'] ?>">
                     <div class="admin-form-actions">
                         <button type="submit" class="btn btn-red">Confirm Delete</button>
-                        <a href="/itec106/admin.php?tab=scores" class="btn btn-blue admin-btn">Cancel</a>
+                        <a href="<?= BASE_URL ?>/admin.php?tab=scores" class="btn btn-blue admin-btn">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -471,7 +471,7 @@ require_once __DIR__ . '/../views/partials/header.php';
         <div class="card">
             <div class="admin-assets-header">
                 <h2 class="admin-assets-title">Recent Game Sessions</h2>
-                <form class="admin-search-form" method="GET" action="/itec106/admin.php">
+                <form class="admin-search-form" method="GET" action="<?= BASE_URL ?>/admin.php">
                     <input type="hidden" name="tab" value="scores">
                     <input class="admin-search-input" type="text" name="search" placeholder="Search by player..." value="<?= htmlspecialchars($search) ?>">
                     <select class="admin-search-input" name="difficulty" style="width:auto;">
@@ -482,7 +482,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                     </select>
                     <button type="submit" class="btn btn-blue admin-btn">Filter</button>
                     <?php if ($search || $diff_filter): ?>
-                        <a href="/itec106/admin.php?tab=scores" class="btn btn-red admin-btn">Clear</a>
+                        <a href="<?= BASE_URL ?>/admin.php?tab=scores" class="btn btn-red admin-btn">Clear</a>
                     <?php endif; ?>
                 </form>
             </div>
@@ -499,19 +499,19 @@ require_once __DIR__ . '/../views/partials/header.php';
                         $sdir = $_GET['dir'] ?? 'asc';
                         ?>
                         <th class="admin-th <?= $ssort === 'id' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=scores&sort=id&dir=<?= $ssort === 'id' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">ID <?= $ssort === 'id' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=scores&sort=id&dir=<?= $ssort === 'id' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">ID <?= $ssort === 'id' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $ssort === 'username' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=scores&sort=username&dir=<?= $ssort === 'username' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Player <?= $ssort === 'username' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=scores&sort=username&dir=<?= $ssort === 'username' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Player <?= $ssort === 'username' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $ssort === 'streak' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=scores&sort=streak&dir=<?= $ssort === 'streak' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Streak <?= $ssort === 'streak' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=scores&sort=streak&dir=<?= $ssort === 'streak' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Streak <?= $ssort === 'streak' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $ssort === 'difficulty' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=scores&sort=difficulty&dir=<?= $ssort === 'difficulty' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Difficulty <?= $ssort === 'difficulty' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=scores&sort=difficulty&dir=<?= $ssort === 'difficulty' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Difficulty <?= $ssort === 'difficulty' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $ssort === 'played_at' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="/itec106/admin.php?tab=scores&sort=played_at&dir=<?= $ssort === 'played_at' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Played At <?= $ssort === 'played_at' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                            <a href="<?= BASE_URL ?>/admin.php?tab=scores&sort=played_at&dir=<?= $ssort === 'played_at' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Played At <?= $ssort === 'played_at' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th">Actions</th>
                     </tr>
@@ -535,7 +535,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                             <td class="admin-td"><?= date('M j, Y g:i A', strtotime($s['played_at'])) ?></td>
                             <td class="admin-td">
                                 <?php if (hasPermission($pdo, 'scores.delete')): ?>
-                                <a href="/itec106/admin.php?tab=scores&delete_score=<?= $s['id'] ?>" class="btn btn-red admin-btn">Delete</a>
+                                <a href="<?= BASE_URL ?>/admin.php?tab=scores&delete_score=<?= $s['id'] ?>" class="btn btn-red admin-btn">Delete</a>
                                 <?php endif; ?>
                             </td>
                         </tr>

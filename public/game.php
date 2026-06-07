@@ -14,7 +14,7 @@ if (isset($_GET['restart'])) {
         unset($_SESSION['current_asset'], $_SESSION['next_asset'], $_SESSION['score'], $_SESSION['lives'], $_SESSION['round'], $_SESSION['game_over'], $_SESSION['last_guess']);
     }
     session_write_close();
-    header("Location: /itec106/game.php");
+    header("Location: " . BASE_URL . "/game.php");
     exit;
 }
 
@@ -23,16 +23,16 @@ if (empty($_SESSION['current_asset']) && $_SERVER['REQUEST_METHOD'] === 'POST' &
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guess'])) {
-    processGuess($pdo, $_POST['guess']);
+    processGuess($pdo, $_POST['guess'], $_SESSION['acct_id']);
     session_write_close();
-    header("Location: /itec106/game.php");
+    header("Location: " . BASE_URL . "/game.php");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['continue'])) {
     unset($_SESSION['last_guess']);
     session_write_close();
-    header("Location: /itec106/game.php");
+    header("Location: " . BASE_URL . "/game.php");
     exit;
 }
 
@@ -70,9 +70,9 @@ require_once __DIR__ . '/../views/partials/header.php';
             <p class="game-over-keys">Keyboard: <kbd>E</kbd> Easy &middot; <kbd>M</kbd> Medium &middot; <kbd>H</kbd> Hard</p>
 
             <div class="game-over-actions">
-                <a href="/itec106/game.php?restart=true&difficulty=easy" class="btn btn-green game-over-btn" id="reboot-easy">Reboot (Easy)</a>
-                <a href="/itec106/game.php?restart=true&difficulty=medium" class="btn btn-blue game-over-btn" id="reboot-medium">Reboot (Medium)</a>
-                <a href="/itec106/game.php?restart=true&difficulty=hard" class="btn btn-red game-over-btn" id="reboot-hard">Reboot (Hard)</a>
+                <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=easy" class="btn btn-green game-over-btn" id="reboot-easy">Reboot (Easy)</a>
+                <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=medium" class="btn btn-blue game-over-btn" id="reboot-medium">Reboot (Medium)</a>
+                <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=hard" class="btn btn-red game-over-btn" id="reboot-hard">Reboot (Hard)</a>
             </div>
         </div>
 
@@ -108,7 +108,7 @@ require_once __DIR__ . '/../views/partials/header.php';
 
             <p class="game-result-keys">Press <kbd>Enter</kbd> or <kbd>Space</kbd> to continue</p>
 
-            <form method="POST" action="/itec106/game.php" id="form-continue">
+            <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-continue">
                 <button type="submit" name="continue" value="1" class="btn btn-blue game-continue-btn">Continue</button>
             </form>
         </div>
@@ -121,7 +121,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 Guess whether the next hardware component's price will be higher or lower. Three errors and your connection is terminated.
             </p>
 
-            <form class="game-diff-form" method="POST" action="/itec106/game.php">
+            <form class="game-diff-form" method="POST" action="<?= BASE_URL ?>/game.php">
                 <label class="game-diff-label">Select Difficulty:</label>
                 <div class="game-diff-options">
                     <button type="submit" name="difficulty" value="easy"   class="btn btn-green game-diff-btn">Easy ±10%</button>

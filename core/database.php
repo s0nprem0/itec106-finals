@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/config.php';
+
 // 1. Define secure credentials (use env vars in Docker, fallback for local dev)
 define('DB_HOST', getenv('MYSQL_HOST') ?: 'localhost');
 define('DB_USER', getenv('MYSQL_USER') ?: 'root');

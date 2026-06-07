@@ -21,5 +21,5 @@ if (ini_get('session.use_cookies')) {
 
 session_destroy();
 
-header("Location: /itec106/index.php");
+header("Location: " . BASE_URL . "/index.php");
 exit;

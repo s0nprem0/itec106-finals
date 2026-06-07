@@ -81,11 +81,11 @@ $diffClass = match($diff) {
     <p class="game-prompt">Will the next item cost more or less?</p>
 
     <div class="game-actions">
-        <form method="POST" action="/itec106/game.php" id="form-higher">
+        <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-higher">
             <input type="hidden" name="guess" value="higher">
             <button type="submit" class="btn btn-green game-btn">↑ Higher</button>
         </form>
-        <form method="POST" action="/itec106/game.php" id="form-lower">
+        <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-lower">
             <input type="hidden" name="guess" value="lower">
             <button type="submit" class="btn btn-red game-btn">↓ Lower</button>
         </form>

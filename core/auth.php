@@ -13,16 +13,8 @@ function requireLogin() {
             return;
         }
         session_write_close();
-        header("Location: /itec106/index.php");
+        header("Location: " . BASE_URL . "/index.php");
         exit;
-    }
-}
-
-function requireAdmin() {
-    requireLogin();
-    if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-        http_response_code(403);
-        die("Access denied.");
     }
 }
 
@@ -108,7 +100,7 @@ class Auth {
 
         setcookie(REMEMBER_COOKIE, $rawToken, [
             'expires'  => time() + 86400 * REMEMBER_DAYS,
-            'path'     => '/itec106/',
+            'path'     => BASE_URL . '/',
             'secure'   => isset($_SERVER['HTTPS']),
             'httponly' => true,
             'samesite' => 'Lax',
@@ -132,7 +124,7 @@ class Auth {
 
         setcookie(REMEMBER_COOKIE, '', [
             'expires'  => time() - 3600,
-            'path'     => '/itec106/',
+            'path'     => BASE_URL . '/',
             'secure'   => isset($_SERVER['HTTPS']),
             'httponly' => true,
             'samesite' => 'Lax',
