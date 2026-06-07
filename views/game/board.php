@@ -161,13 +161,13 @@ $diffClass = match($diff) {
 
     input.addEventListener('input', function() { updateBet(parseFloat(this.value) || 0); });
 
-    // FIX 2: Prevent the Enter key from submitting a blank screen and guide user
     input.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             alert("Bet logged. Please click 'Higher' or 'Lower' (or use H/L keys) to finalize your move.");
         }
     });
+    
 
     document.querySelectorAll('.game-bet-preset').forEach(function(p) {
         p.addEventListener('click', function() { updateBet(parseFloat(this.dataset.amount) || 0); });
@@ -178,6 +178,22 @@ $diffClass = match($diff) {
         var key = e.key.toLowerCase();
         if (key === 'h') document.getElementById('form-higher').querySelector('button').click();
         if (key === 'l') document.getElementById('form-lower').querySelector('button').click();
+    });
+
+    document.querySelectorAll('.game-action-form').forEach(function(form) {
+        form.addEventListener('submit', function() {
+            // Find all game buttons and disable them immediately upon click
+            document.querySelectorAll('.game-btn').forEach(function(btn) {
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+                btn.style.cursor = 'wait';
+                
+                // Optional: Change the text of the clicked button to show it's working
+                if (btn === document.activeElement) {
+                    btn.innerHTML = 'Processing...';
+                }
+            });
+        });
     });
 })();
 </script>
