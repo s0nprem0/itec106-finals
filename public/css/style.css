@@ -609,18 +609,69 @@ kbd {
     border-top-color: var(--flat-red);
 }
 
+.game-result-tie {
+    border-top-color: var(--flat-purple);
+}
+
 .game-result-badge {
     font-size: 1.8rem;
     font-weight: bold;
     margin-bottom: 0.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    color: #fff;
 }
 
 .game-result-correct .game-result-badge {
-    color: var(--flat-green);
+    background-color: var(--flat-green);
 }
 
 .game-result-incorrect .game-result-badge {
+    background-color: var(--flat-red);
+}
+
+.game-result-tie .game-result-badge {
+    background-color: var(--flat-purple);
+}
+
+.game-result-verdict {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--flat-text);
+}
+
+.game-result-correct .game-result-verdict {
+    color: var(--flat-green);
+}
+
+.game-result-incorrect .game-result-verdict {
     color: var(--flat-red);
+}
+
+.game-result-tie .game-result-verdict {
+    color: var(--flat-purple);
+}
+
+.game-profit-neutral {
+    color: var(--flat-purple);
+    font-weight: 600;
+}
+
+.btn-purple {
+    background-color: var(--flat-purple);
+    color: #fff;
+}
+
+.btn-purple:hover {
+    background-color: #6c5ce7;
 }
 
 .game-result-verdict {
@@ -1139,6 +1190,18 @@ kbd {
 }
 
 .game-won-subtitle {
+    color: var(--flat-subtext);
+}
+
+.game-cashout-card {
+    border-top-color: var(--flat-purple);
+}
+
+.game-cashout-title {
+    color: var(--flat-purple);
+}
+
+.game-cashout-subtitle {
     color: var(--flat-subtext);
     font-size: 0.9rem;
     margin-bottom: 1rem;

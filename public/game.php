@@ -57,6 +57,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['continue'])) {
     exit;
 }
 
+// ====================== CASH OUT ======================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cashout'])) {
+    $result = cashOut($pdo, $_SESSION['acct_id']);
+    if (!empty($result['error'])) {
+        $_SESSION['guess_error'] = $result['error'];
+    }
+    session_write_close();
+    header("Location: " . BASE_URL . "/game.php");
+    exit;
+}
+
 // ====================== CLEANUP FLASH MESSAGES ======================
 $is_new_record = !empty($_SESSION['is_new_record']);
 unset($_SESSION['is_new_record']);
@@ -71,7 +82,15 @@ require_once __DIR__ . '/../views/partials/header.php';
 
     <?php if (!empty($_SESSION['game_over'])): ?>
         <!-- GAME OVER SCREEN -->
-        <?php if (!empty($_SESSION['game_won'])): ?>
+        <?php 
+        $endReason = $_SESSION['game_end_reason'] ?? 'completed';
+        $isCashOut = $endReason === 'cashout';
+        ?>
+        <?php if ($isCashOut): ?>
+        <div class="card game-over-card game-cashout-card">
+            <h1 class="game-over-title game-cashout-title">Mission Aborted</h1>
+            <p class="game-cashout-subtitle">You cashed out with $<?= number_format($_SESSION['balance'] ?? 0, 2) ?>.</p>
+        <?php elseif (!empty($_SESSION['game_won'])): ?>
         <div class="card game-over-card game-won-card">
             <h1 class="game-over-title game-won-title">Target Acquired</h1>
             <p class="game-won-subtitle">You reached the $<?= number_format(WIN_TARGET) ?> target!</p>
@@ -113,7 +132,42 @@ require_once __DIR__ . '/../views/partials/header.php';
             </div>
         </div>
 
-        <?php elseif (!empty($_SESSION['last_guess'])): ?>
+        <?php elseif (!empty($_SESSION['last_guess'])):
+            
+            $lg = $_SESSION['last_guess'];
+            $was_correct = $lg['result'] === 'correct';
+            $was_tie = $lg['result'] === 'tie';
+            if ($was_tie): ?>
+            <div class="card game-result-card game-result-tie">
+                <div class="game-result-badge">&#8646;</div>
+                <div class="game-result-verdict">Tie</div>
+                <div class="game-result-compare">
+                    <div class="game-result-item">
+                        <div class="game-result-item-name"><?= htmlspecialchars($lg['prev_item']) ?></div>
+                        <div class="game-result-item-price">$<?= number_format($lg['prev_price'], 2) ?></div>
+                    </div>
+                    <div class="game-result-arrow">&harr;</div>
+                    <div class="game-result-item">
+                        <div class="game-result-item-name"><?= htmlspecialchars($lg['next_item']) ?></div>
+                        <div class="game-result-item-price">$<?= number_format($lg['next_price'], 2) ?></div>
+                    </div>
+                </div>
+                <div class="game-result-detail">
+                    Prices are identical. Your bet is returned.
+                </div>
+                <div class="game-result-bet-info">
+                    Bet: <strong>$<?= number_format($lg['bet'], 2) ?></strong>
+                    &rarr;
+                    <span class="game-profit-neutral">$<?= number_format($lg['bet'], 2) ?> returned</span>
+                </div>
+                <p class="game-result-keys">Press <kbd>Enter</kbd> or <kbd>Space</kbd> to continue</p>
+                <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-continue">
+                    <button type="submit" name="continue" value="1" class="btn btn-blue game-continue-btn" autofocus>Continue</button>
+                </form>
+            </div>
+            <?php return; endif;
+            $price_diff = abs($lg['prev_price'] - $lg['next_price']);
+            $price_diff_fmt = '$' . number_format($price_diff, 2); ?>
             <?php 
             $lg = $_SESSION['last_guess'];
             $was_correct = $lg['result'] === 'correct';

@@ -117,6 +117,10 @@ $diffClass = match($diff) {
             <input type="hidden" name="bet" id="bet-higher" value="<?= min(500, $balance) ?>">
             <button type="submit" class="btn btn-green game-btn">↑ Higher</button>
         </form>
+        <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-cashout" class="game-action-form">
+            <input type="hidden" name="cashout" value="1">
+            <button type="submit" class="btn btn-purple game-btn">Cash Out</button>
+        </form>
         <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-lower" class="game-action-form">
             <input type="hidden" name="guess" value="lower">
             <input type="hidden" name="bet" id="bet-lower" value="<?= min(500, $balance) ?>">
