@@ -306,13 +306,70 @@ input[type="date"] {
 
 .game-over-desc {
     color: var(--macchiato-subtext);
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     font-size: 0.95rem;
 }
 
+.game-over-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 .game-over-btn {
-    font-size: 1.25rem;
-    padding: 0.85rem 2rem;
+    font-size: 1.1rem;
+    padding: 0.85rem 1.5rem;
+}
+
+.game-start-card {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.game-start-title {
+    color: var(--macchiato-blue);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.game-start-desc {
+    color: var(--macchiato-subtext);
+    margin-bottom: 2.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.game-diff-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.game-diff-label {
+    color: var(--macchiato-subtext);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.game-diff-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.game-diff-btn {
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    min-width: 140px;
 }
 
 .game-hud {
@@ -342,6 +399,30 @@ input[type="date"] {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--macchiato-text);
+}
+
+.game-hud-diff {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.game-hud-diff.diff-easy {
+    background-color: rgba(166, 218, 149, 0.15);
+    color: var(--macchiato-green);
+}
+
+.game-hud-diff.diff-medium {
+    background-color: rgba(138, 173, 244, 0.15);
+    color: var(--macchiato-blue);
+}
+
+.game-hud-diff.diff-hard {
+    background-color: rgba(237, 135, 150, 0.15);
+    color: var(--macchiato-red);
 }
 
 .game-hearts {
@@ -580,6 +661,30 @@ input[type="date"] {
     color: var(--macchiato-subtext);
     font-size: 0.85rem;
     text-align: right;
+}
+
+.lb-diff-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.lb-diff-easy {
+    background-color: rgba(166, 218, 149, 0.15);
+    color: var(--macchiato-green);
+}
+
+.lb-diff-medium {
+    background-color: rgba(138, 173, 244, 0.15);
+    color: var(--macchiato-blue);
+}
+
+.lb-diff-hard {
+    background-color: rgba(237, 135, 150, 0.15);
+    color: var(--macchiato-red);
 }
 
 /* ============================================

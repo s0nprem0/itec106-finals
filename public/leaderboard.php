@@ -14,7 +14,8 @@ try {
         SELECT 
             a.username, 
             MAX(s.streak) as highest_streak, 
-            MAX(s.played_at) as achieved_at
+            MAX(s.played_at) as achieved_at,
+            s.difficulty
         FROM scores s
         JOIN accounts a ON s.acct_id = a.acct_id
         GROUP BY a.acct_id, a.username
@@ -50,6 +51,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         <th class="lb-th">Rank</th>
                         <th class="lb-th">Operative</th>
                         <th class="lb-th">Max Streak</th>
+                        <th class="lb-th">Difficulty</th>
                         <th class="lb-th">Date Achieved</th>
                     </tr>
                 </thead>
@@ -61,6 +63,12 @@ require_once __DIR__ . '/../views/partials/header.php';
                         if ($rank === 1)      $rankClass = 'lb-rank-1';
                         elseif ($rank === 2)  $rankClass = 'lb-rank-2';
                         elseif ($rank === 3)  $rankClass = 'lb-rank-3';
+
+                        $diffClass = match($score['difficulty'] ?? 'medium') {
+                            'easy'   => 'lb-diff-easy',
+                            'hard'   => 'lb-diff-hard',
+                            default  => 'lb-diff-medium',
+                        };
                         ?>
                         <tr class="lb-tr">
                             <td class="lb-td lb-rank <?= $rankClass ?>">#<?= $rank ?></td>
@@ -69,6 +77,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                                 <?php if ($rank === 1): ?> 👑<?php endif; ?>
                             </td>
                             <td class="lb-td lb-streak"><?= $score['highest_streak'] ?></td>
+                            <td class="lb-td"><span class="lb-diff-badge <?= $diffClass ?>"><?= htmlspecialchars(ucfirst($score['difficulty'] ?? 'medium')) ?></span></td>
                             <td class="lb-td lb-date"><?= date('M j, Y', strtotime($score['achieved_at'])) ?></td>
                         </tr>
                         <?php $rank++; ?>

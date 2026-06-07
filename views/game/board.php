@@ -1,10 +1,19 @@
 <?php
-// views/game/board.php
 $asset = $_SESSION['current_asset'];
 $next = $_SESSION['next_asset'];
 $score = $_SESSION['score'];
 $lives = $_SESSION['lives'];
 $round = $_SESSION['round'];
+$diff = $_SESSION['difficulty'] ?? 'medium';
+$diffConfig = DIFFICULTIES[$diff];
+$diffLabel = $diffConfig['label'];
+$diffDesc = $diffConfig['desc'];
+
+$diffClass = match($diff) {
+    'easy'   => 'diff-easy',
+    'hard'   => 'diff-hard',
+    default => 'diff-medium',
+};
 ?>
 
 <div class="game-hud">
@@ -15,6 +24,10 @@ $round = $_SESSION['round'];
     <div class="game-hud-item">
         <span class="game-hud-label">Round</span>
         <span class="game-hud-value"><?= $round ?></span>
+    </div>
+    <div class="game-hud-item">
+        <span class="game-hud-label">Difficulty</span>
+        <span class="game-hud-diff <?= $diffClass ?>"><?= $diffLabel ?> <?= $diffDesc ?></span>
     </div>
     <div class="game-hud-item">
         <span class="game-hud-label">Lives</span>
@@ -30,6 +43,7 @@ $round = $_SESSION['round'];
 <div class="game-instructions">
     <div class="game-instructions-content">
         <strong>How to Play:</strong> You'll see a hardware item with a price. Guess whether the <em>next</em> item will cost <strong>higher</strong> or <strong>lower</strong>. Correct guesses extend your streak. Three wrong guesses and it's game over.
+        Current volatility: <strong><?= $diffDesc ?></strong>.
     </div>
 </div>
 <?php endif; ?>

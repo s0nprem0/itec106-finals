@@ -54,6 +54,7 @@ CREATE TABLE scores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     acct_id INT NOT NULL,   -- references your account ID
     streak INT NOT NULL,              -- number of correct guesses in a row
+    difficulty VARCHAR(10) NOT NULL DEFAULT 'medium', -- difficulty level: easy, medium, hard
     played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (acct_id)
         REFERENCES accounts(acct_id)
