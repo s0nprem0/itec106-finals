@@ -14,6 +14,23 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech Spec Showdown</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/style.css">
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var toggle = document.querySelector('.nav-dropdown-toggle');
+        var dropdown = document.querySelector('.nav-dropdown');
+        if (toggle && dropdown) {
+            toggle.addEventListener('click', function(e) { e.stopPropagation(); dropdown.classList.toggle('nav-dropdown--open'); });
+            document.addEventListener('click', function(e) { if (!dropdown.contains(e.target)) dropdown.classList.remove('nav-dropdown--open'); });
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { dropdown.classList.remove('nav-dropdown--open'); toggle.focus(); } });
+        }
+        document.querySelectorAll('form').forEach(function(f) {
+            f.addEventListener('submit', function() {
+                var btns = f.querySelectorAll('button[type="submit"], input[type="submit"]');
+                btns.forEach(function(b) { b.disabled = true; });
+            });
+        });
+    });
+    </script>
 </head>
 <body>
 

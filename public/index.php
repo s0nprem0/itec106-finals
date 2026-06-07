@@ -59,6 +59,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <span>Remember me for 30 days</span>
             </label>
             <button type="submit" class="btn btn-blue">Sign In</button>
+            <a href="<?= BASE_URL ?>/forgot_password.php" class="btn btn-link" style="text-align:center;font-size:0.8rem;display:block;">Forgot password?</a>
         </form>
 
         <p class="auth-footer">

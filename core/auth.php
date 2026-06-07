@@ -38,11 +38,20 @@ function requirePermission($pdo, $permission) {
 
 class Auth {
     public static function loginUser($pdo, $username, $password, $remember = false) {
+        $attempts = $_SESSION['login_attempts'] ?? 0;
+        $last_attempt = $_SESSION['login_last_attempt'] ?? 0;
+        $wait = min(pow(2, $attempts), 60);
+        if ($attempts > 0 && time() - $last_attempt < $wait) {
+            $remaining = $wait - (time() - $last_attempt);
+            return "Too many failed attempts. Please wait $remaining seconds.";
+        }
+
         $stmt = $pdo->prepare("SELECT acct_id, password, role FROM accounts WHERE username = ?");
         $stmt->execute([$username]);
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['login_attempts'] = 0;
             $_SESSION['acct_id'] = $user['acct_id'];
             $_SESSION['role'] = $user['role'];
 
@@ -51,6 +60,9 @@ class Auth {
             }
             return true;
         }
+
+        $_SESSION['login_attempts'] = $attempts + 1;
+        $_SESSION['login_last_attempt'] = time();
         return "Invalid username or password.";
     }
 

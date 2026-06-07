@@ -7,13 +7,14 @@ requireLogin();
 
 try {
     $query = "
-        SELECT 
-            a.username, 
-            MAX(s.streak) as highest_streak, 
-            MAX(s.played_at) as achieved_at,
-            MAX(s.difficulty) AS difficulty
-        FROM scores s
-        JOIN accounts a ON s.acct_id = a.acct_id
+        SELECT a.username, ms.max_streak as highest_streak, s.played_at as achieved_at, s.difficulty
+        FROM (
+            SELECT s.acct_id, MAX(s.streak) as max_streak
+            FROM scores s
+            GROUP BY s.acct_id
+        ) ms
+        JOIN accounts a ON ms.acct_id = a.acct_id
+        JOIN scores s ON s.acct_id = ms.acct_id AND s.streak = ms.max_streak
         GROUP BY a.acct_id, a.username
         ORDER BY highest_streak DESC, achieved_at ASC
         LIMIT 10

@@ -24,8 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username  = trim($_POST['username'] ?? '');
     $birthdate = trim($_POST['birthdate'] ?? '');
     $password  = $_POST['password'] ?? '';
+    $confirm   = $_POST['confirm_password'] ?? '';
 
-    if ($firstName && $surname && $email && $username && $birthdate && $password) {
+    if ($password !== $confirm) {
+        $error = "Passwords do not match.";
+    } elseif ($firstName && $surname && $email && $username && $birthdate && $password) {
         $result = Auth::registerUser($pdo, $firstName, $surname, $email, $username, $birthdate, $password);
 
         if ($result['success']) {
@@ -64,7 +67,8 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <input class="auth-input" type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
                     <input class="auth-input" type="date" name="birthdate" required value="<?= htmlspecialchars($_POST['birthdate'] ?? '') ?>">
                 </div>
-                <input class="auth-input" type="password" name="password" placeholder="Password" required>
+                <input class="auth-input" type="password" name="password" placeholder="Password" minlength="6" required title="At least 6 characters">
+                <input class="auth-input" type="password" name="confirm_password" placeholder="Confirm Password" minlength="6" required title="Passwords must match">
                 <button type="submit" class="btn btn-blue">Register</button>
             </form>
 

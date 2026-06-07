@@ -25,6 +25,7 @@ if (!$user) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete_account'])) {
         $del_password = $_POST['del_password'] ?? '';
+        $del_confirm = $_POST['del_confirm'] ?? '';
 
         $stmt = $pdo->prepare("SELECT password, role FROM accounts WHERE acct_id = ?");
         $stmt->execute([$acct_id]);
@@ -38,6 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $delete_errors[] = 'Current password is required to delete your account.';
         } elseif (!password_verify($del_password, $acct['password'])) {
             $delete_errors[] = 'Current password is incorrect.';
+        } elseif (strtoupper($del_confirm) !== 'DELETE') {
+            $delete_errors[] = 'Please type DELETE to confirm account deletion.';
         } else {
             try {
                 $stmt = $pdo->prepare("DELETE FROM accounts WHERE acct_id = ?");
@@ -209,6 +212,12 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <div class="admin-form-group">
                     <label class="admin-form-label" for="new_password">New Password</label>
                     <input class="admin-form-input" type="password" id="new_password" name="new_password" minlength="6" required title="At least 6 characters">
+                    <div id="password-strength" class="password-strength">
+                        <div class="password-strength-bar">
+                            <div class="password-strength-fill" id="strength-fill"></div>
+                        </div>
+                        <span class="password-strength-text" id="strength-text"></span>
+                    </div>
                 </div>
             </div>
 
@@ -235,7 +244,7 @@ require_once __DIR__ . '/../views/partials/header.php';
             </div>
         <?php endif; ?>
 
-        <form class="settings-form" method="POST" action="<?= BASE_URL ?>/settings.php">
+        <form class="settings-form" method="POST" action="<?= BASE_URL ?>/settings.php" onsubmit="return confirm('This will permanently delete your account. Are you sure?');">
             <p class="settings-delete-warning">
                 This will permanently delete your account and all associated data
                 (game history, session tokens, etc.). This action cannot be undone.
@@ -249,6 +258,14 @@ require_once __DIR__ . '/../views/partials/header.php';
                 </div>
             </div>
 
+            <div class="admin-form-row">
+                <div class="admin-form-group">
+                    <label class="admin-form-label" for="del_confirm">Type <strong>DELETE</strong> to confirm</label>
+                    <input class="admin-form-input" type="text" id="del_confirm" name="del_confirm" required
+                           placeholder="Type DELETE here" pattern="DELETE" title="Type DELETE exactly">
+                </div>
+            </div>
+
             <div class="settings-actions">
                 <input type="hidden" name="delete_account" value="1">
                 <button type="submit" class="btn btn-red">Delete My Account</button>
@@ -257,5 +274,42 @@ require_once __DIR__ . '/../views/partials/header.php';
     </div>
 
 </div><?php // close settings-page ?>
+
+<script>
+document.getElementById('new_password').addEventListener('input', function() {
+    var pwd = this.value;
+    var fill = document.getElementById('strength-fill');
+    var text = document.getElementById('strength-text');
+    var score = 0;
+
+    if (pwd.length >= 6) score += 1;
+    if (pwd.length >= 8) score += 1;
+    if (pwd.length >= 10) score += 1;
+    if (/[a-z]/.test(pwd)) score += 1;
+    if (/[A-Z]/.test(pwd)) score += 1;
+    if (/[0-9]/.test(pwd)) score += 1;
+    if (/[^a-zA-Z0-9]/.test(pwd)) score += 1;
+
+    if (pwd.length === 0) {
+        fill.style.width = '0';
+        text.textContent = '';
+    } else if (score < 3) {
+        fill.style.width = '33%';
+        fill.style.backgroundColor = '#e74c3c';
+        text.textContent = 'Weak';
+        text.style.color = '#e74c3c';
+    } else if (score < 5) {
+        fill.style.width = '66%';
+        fill.style.backgroundColor = '#f39c12';
+        text.textContent = 'Medium';
+        text.style.color = '#f39c12';
+    } else {
+        fill.style.width = '100%';
+        fill.style.backgroundColor = '#27ae60';
+        text.textContent = 'Strong';
+        text.style.color = '#27ae60';
+    }
+});
+</script>
 
 <?php require_once __DIR__ . '/../views/partials/footer.php'; ?>

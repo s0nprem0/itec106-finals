@@ -87,26 +87,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 try {
-    $total_players = $pdo->query("SELECT COUNT(*) FROM accounts WHERE role = 'player'")->fetchColumn();
+    $total_players = $pdo->query("SELECT COUNT(*) FROM accounts")->fetchColumn();
     $total_games = $pdo->query("SELECT COUNT(*) FROM scores")->fetchColumn();
     $highest_streak = $pdo->query("SELECT MAX(streak) FROM scores")->fetchColumn() ?? 0;
     $total_assets = $pdo->query("SELECT COUNT(*) FROM assets")->fetchColumn();
 
     $categories = $pdo->query("SELECT DISTINCT category FROM assets ORDER BY category ASC")->fetchAll(PDO::FETCH_COLUMN);
 
+    $per_page = 20;
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $offset = ($page - 1) * $per_page;
+    $total_pages = 1;
+    $pagination_qs = [];
+
     $assets = [];
     $players = [];
     $scores = [];
+    $total_filtered = 0;
 
     if ($tab === 'assets') {
         $has_create_perm = hasPermission($pdo, 'assets.create');
         $sort = $_GET['sort'] ?? 'category';
         $allowed_sorts = ['category', 'item_name', 'price', 'id'];
-        if (!in_array($sort, $allowed_sorts)) {
-            $sort = 'category';
-        }
-        $sort_map = ['category' => 'category', 'item_name' => 'item_name', 'price' => 'price', 'id' => 'id'];
-        $order = $sort_map[$sort] ?? 'category';
+        if (!in_array($sort, $allowed_sorts)) $sort = 'category';
+        $order = $sort;
 
         $where = '';
         $params = [];
@@ -114,17 +118,18 @@ try {
             $where = "WHERE item_name LIKE ? OR category LIKE ?";
             $params = ["%$search%", "%$search%"];
         }
-        $stmt = $pdo->prepare("SELECT * FROM assets $where ORDER BY $order $dir_sql, id ASC");
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM assets $where");
+        $stmt->execute($params);
+        $total_filtered = (int)$stmt->fetchColumn();
+
+        $stmt = $pdo->prepare("SELECT * FROM assets $where ORDER BY $order $dir_sql, id ASC LIMIT $per_page OFFSET $offset");
         $stmt->execute($params);
         $assets = $stmt->fetchAll();
     } elseif ($tab === 'players') {
         $sort = $_GET['sort'] ?? 'acct_id';
         $allowed_sorts = ['acct_id', 'username', 'first_name', 'surname', 'email_addr', 'role', 'birthdate'];
-        if (!in_array($sort, $allowed_sorts)) {
-            $sort = 'acct_id';
-        }
-        $sort_map = ['acct_id' => 'acct_id', 'username' => 'username', 'first_name' => 'first_name', 'surname' => 'surname', 'email_addr' => 'email_addr', 'role' => 'role', 'birthdate' => 'birthdate'];
-        $order = $sort_map[$sort] ?? 'acct_id';
+        if (!in_array($sort, $allowed_sorts)) $sort = 'acct_id';
+        $order = $sort;
 
         $where = '';
         $params = [];
@@ -132,15 +137,17 @@ try {
             $where = "WHERE username LIKE ? OR first_name LIKE ? OR surname LIKE ? OR email_addr LIKE ?";
             $params = ["%$search%", "%$search%", "%$search%", "%$search%"];
         }
-        $stmt = $pdo->prepare("SELECT acct_id, username, first_name, surname, email_addr, role, birthdate FROM accounts $where ORDER BY $order $dir_sql");
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM accounts $where");
+        $stmt->execute($params);
+        $total_filtered = (int)$stmt->fetchColumn();
+
+        $stmt = $pdo->prepare("SELECT acct_id, username, first_name, surname, email_addr, role, birthdate FROM accounts $where ORDER BY $order $dir_sql LIMIT $per_page OFFSET $offset");
         $stmt->execute($params);
         $players = $stmt->fetchAll();
     } elseif ($tab === 'scores') {
         $sort = $_GET['sort'] ?? 'played_at';
         $allowed_sorts = ['id', 'streak', 'difficulty', 'played_at', 'username'];
-        if (!in_array($sort, $allowed_sorts)) {
-            $sort = 'played_at';
-        }
+        if (!in_array($sort, $allowed_sorts)) $sort = 'played_at';
         $sort_map = ['id' => 's.id', 'streak' => 's.streak', 'difficulty' => 's.difficulty', 'played_at' => 's.played_at', 'username' => 'a.username'];
         $order = $sort_map[$sort] ?? 's.played_at';
 
@@ -155,12 +162,22 @@ try {
             $conditions[] = "s.difficulty = ?";
             $params[] = $diff_filter;
         }
-        if ($conditions) {
-            $where = "WHERE " . implode(' AND ', $conditions);
-        }
-        $stmt = $pdo->prepare("SELECT s.id, s.streak, s.difficulty, s.played_at, a.username FROM scores s JOIN accounts a ON s.acct_id = a.acct_id $where ORDER BY $order $dir_sql LIMIT 50");
+        if ($conditions) $where = "WHERE " . implode(' AND ', $conditions);
+
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM scores s JOIN accounts a ON s.acct_id = a.acct_id $where");
+        $stmt->execute($params);
+        $total_filtered = (int)$stmt->fetchColumn();
+
+        $stmt = $pdo->prepare("SELECT s.id, s.streak, s.difficulty, s.played_at, a.username FROM scores s JOIN accounts a ON s.acct_id = a.acct_id $where ORDER BY $order $dir_sql LIMIT $per_page OFFSET $offset");
         $stmt->execute($params);
         $scores = $stmt->fetchAll();
+    }
+
+    $total_pages = max(1, ceil($total_filtered / $per_page));
+    if ($page > $total_pages) $page = $total_pages;
+    $pagination_qs = [];
+    foreach (['tab', 'sort', 'dir', 'search', 'difficulty'] as $k) {
+        if (!empty($_GET[$k])) $pagination_qs[$k] = $_GET[$k];
     }
 } catch (PDOException $e) {
     $error_msg = "System Error: Unable to retrieve mainframe analytics.";
@@ -297,6 +314,25 @@ require_once __DIR__ . '/../views/partials/header.php';
                 </tbody>
             </table>
             </div>
+            <?php if ($total_pages > 1): ?>
+            <div class="admin-pagination">
+                <span class="admin-pagination-info">Page <?= $page ?> of <?= $total_pages ?> (<?= $total_filtered ?> total)</span>
+                <div class="admin-pagination-links">
+                    <?php if ($page > 1): ?>
+                    <a href="<?= BASE_URL ?>/admin.php?<?= http_build_query(array_merge($pagination_qs, ['page' => $page - 1])) ?>" class="admin-pagination-link">&laquo; Prev</a>
+                    <?php endif; ?>
+                    <?php
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    for ($i = $start_page; $i <= $end_page; $i++): ?>
+                        <a href="<?= BASE_URL ?>/admin.php?<?= http_build_query(array_merge($pagination_qs, ['page' => $i])) ?>" class="admin-pagination-link <?= $i === $page ? 'admin-pagination-active' : '' ?>"><?= $i ?></a>
+                    <?php endfor; ?>
+                    <?php if ($page < $total_pages): ?>
+                    <a href="<?= BASE_URL ?>/admin.php?<?= http_build_query(array_merge($pagination_qs, ['page' => $page + 1])) ?>" class="admin-pagination-link">Next &raquo;</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
 
 <?php elseif ($tab === 'players'): ?>
@@ -359,7 +395,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                             <td class="admin-td"><?= htmlspecialchars($p['email_addr']) ?></td>
                             <td class="admin-td">
                                 <?php if (hasPermission($pdo, 'players.edit') && $p['acct_id'] != $_SESSION['acct_id']): ?>
-                                <form method="POST" action="<?= BASE_URL ?>/admin.php?tab=players" class="admin-price-form">
+                                <form method="POST" action="<?= BASE_URL ?>/admin.php?tab=players" class="admin-price-form" onsubmit="return confirm('Change role for this user?')">
                                     <input type="hidden" name="action" value="update_role">
                                     <input type="hidden" name="target_id" value="<?= $p['acct_id'] ?>">
                                     <select name="new_role" class="admin-select-sm">
@@ -384,6 +420,25 @@ require_once __DIR__ . '/../views/partials/header.php';
                 </tbody>
             </table>
             </div>
+            <?php if ($total_pages > 1): ?>
+            <div class="admin-pagination">
+                <span class="admin-pagination-info">Page <?= $page ?> of <?= $total_pages ?> (<?= $total_filtered ?> total)</span>
+                <div class="admin-pagination-links">
+                    <?php if ($page > 1): ?>
+                    <a href="<?= BASE_URL ?>/admin.php?<?= http_build_query(array_merge($pagination_qs, ['page' => $page - 1])) ?>" class="admin-pagination-link">&laquo; Prev</a>
+                    <?php endif; ?>
+                    <?php
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    for ($i = $start_page; $i <= $end_page; $i++): ?>
+                        <a href="<?= BASE_URL ?>/admin.php?<?= http_build_query(array_merge($pagination_qs, ['page' => $i])) ?>" class="admin-pagination-link <?= $i === $page ? 'admin-pagination-active' : '' ?>"><?= $i ?></a>
+                    <?php endfor; ?>
+                    <?php if ($page < $total_pages): ?>
+                    <a href="<?= BASE_URL ?>/admin.php?<?= http_build_query(array_merge($pagination_qs, ['page' => $page + 1])) ?>" class="admin-pagination-link">Next &raquo;</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
 
 <?php elseif ($tab === 'scores'): ?>
@@ -484,6 +539,25 @@ require_once __DIR__ . '/../views/partials/header.php';
                 </tbody>
             </table>
             </div>
+            <?php if ($total_pages > 1): ?>
+            <div class="admin-pagination">
+                <span class="admin-pagination-info">Page <?= $page ?> of <?= $total_pages ?> (<?= $total_filtered ?> total)</span>
+                <div class="admin-pagination-links">
+                    <?php if ($page > 1): ?>
+                    <a href="<?= BASE_URL ?>/admin.php?<?= http_build_query(array_merge($pagination_qs, ['page' => $page - 1])) ?>" class="admin-pagination-link">&laquo; Prev</a>
+                    <?php endif; ?>
+                    <?php
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    for ($i = $start_page; $i <= $end_page; $i++): ?>
+                        <a href="<?= BASE_URL ?>/admin.php?<?= http_build_query(array_merge($pagination_qs, ['page' => $i])) ?>" class="admin-pagination-link <?= $i === $page ? 'admin-pagination-active' : '' ?>"><?= $i ?></a>
+                    <?php endfor; ?>
+                    <?php if ($page < $total_pages): ?>
+                    <a href="<?= BASE_URL ?>/admin.php?<?= http_build_query(array_merge($pagination_qs, ['page' => $page + 1])) ?>" class="admin-pagination-link">Next &raquo;</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
 
 <?php endif; ?>
