@@ -26,7 +26,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
         document.querySelectorAll('form').forEach(function(f) {
             f.addEventListener('submit', function() {
                 var btns = f.querySelectorAll('button[type="submit"], input[type="submit"]');
-                btns.forEach(function(b) { b.disabled = true; });
+                setTimeout(function() { btns.forEach(function(b) { b.disabled = true; }); }, 0);
             });
         });
     });
