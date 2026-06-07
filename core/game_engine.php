@@ -6,9 +6,9 @@ const MAX_ROUNDS = 20;
 
 // Improved DIFFICULTIES with better balance
 const DIFFICULTIES = [
-    'easy'   => ['volatility' => 12, 'start_money' => 18000, 'payout' => 1.35, 'label' => 'Easy',    'desc' => '±12%'],
-    'medium' => ['volatility' => 22, 'start_money' => 12000, 'payout' => 1.65, 'label' => 'Medium',  'desc' => '±22%'],
-    'hard'   => ['volatility' => 32, 'start_money' => 7000,  'payout' => 2.1, 'label' => 'Hard',    'desc' => '±32%'],
+    'easy'   => ['volatility' => 12, 'start_money' => 18000, 'payout' => 1.85, 'label' => 'Easy',    'desc' => '±12%'],
+    'medium' => ['volatility' => 22, 'start_money' => 12000, 'payout' => 2.00, 'label' => 'Medium',  'desc' => '±22%'],
+    'hard'   => ['volatility' => 32, 'start_money' => 7000,  'payout' => 2.50, 'label' => 'Hard',    'desc' => '±32%'],
 ];
 
 /**
