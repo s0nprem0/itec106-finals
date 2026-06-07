@@ -1,4 +1,5 @@
 <?php
+// public/admin.php
 
 require_once __DIR__ . '/../core/database.php';
 require_once __DIR__ . '/../core/auth.php';
@@ -244,9 +245,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         <a href="<?= BASE_URL ?>/admin.php?tab=assets" class="btn btn-red admin-btn">Clear</a>
                     <?php endif; ?>
                 </form>
-            </div>
-
-            <?php if ($search && !empty($assets)): ?>
+                </div> </div> <?php if ($search && !empty($assets)): ?>
                 <p class="admin-search-count"><?= count($assets) ?> result(s) for "<?= htmlspecialchars($search) ?>"</p>
             <?php endif; ?>
 

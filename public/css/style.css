@@ -1300,6 +1300,7 @@ kbd {
 .admin-table-wrapper {
     flex: 1;
     overflow-y: auto;
+    overflow-x: auto;
     min-height: 0;
 }
 
