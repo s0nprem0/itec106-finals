@@ -11,7 +11,7 @@ if (isset($_GET['restart'])) {
     if ($diff && isset(DIFFICULTIES[$diff])) {
         initGame($pdo, $diff);
     } else {
-        unset($_SESSION['current_asset'], $_SESSION['next_asset'], $_SESSION['score'], $_SESSION['lives'], $_SESSION['round'], $_SESSION['game_over']);
+        unset($_SESSION['current_asset'], $_SESSION['next_asset'], $_SESSION['score'], $_SESSION['lives'], $_SESSION['round'], $_SESSION['game_over'], $_SESSION['last_guess']);
     }
     session_write_close();
     header("Location: /itec106/game.php");
@@ -29,6 +29,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guess'])) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['continue'])) {
+    unset($_SESSION['last_guess']);
+    session_write_close();
+    header("Location: /itec106/game.php");
+    exit;
+}
+
+$best_streak = 0;
+try {
+    $stmt = $pdo->prepare("SELECT COALESCE(MAX(streak), 0) FROM scores WHERE acct_id = ?");
+    $stmt->execute([$_SESSION['acct_id']]);
+    $best_streak = (int)$stmt->fetchColumn();
+} catch (PDOException $e) {
+    $best_streak = 0;
+}
+
 require_once __DIR__ . '/../views/partials/header.php';
 ?>
 
@@ -43,6 +59,10 @@ require_once __DIR__ . '/../views/partials/header.php';
                 Final Intelligence Streak: <span class="game-over-streak"><?= $_SESSION['score'] ?></span>
             </h2>
 
+            <?php if ($best_streak > 0 && $_SESSION['score'] >= $best_streak): ?>
+                <p class="game-over-record">&#9733; New Personal Record! &#9733;</p>
+            <?php endif; ?>
+
             <p class="game-over-desc">
                 Connection terminated. Your performance data has been securely logged to the mainframe.
             </p>
@@ -52,6 +72,41 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <a href="/itec106/game.php?restart=true&difficulty=medium" class="btn btn-blue game-over-btn">Reboot (Medium)</a>
                 <a href="/itec106/game.php?restart=true&difficulty=hard" class="btn btn-red game-over-btn">Reboot (Hard)</a>
             </div>
+        </div>
+
+    <?php elseif (!empty($_SESSION['last_guess'])):
+
+        $lg = $_SESSION['last_guess'];
+        $was_correct = $lg['result'] === 'correct';
+        $price_diff = abs($lg['prev_price'] - $lg['next_price']);
+        $price_diff_fmt = '$' . number_format($price_diff, 2);
+    ?>
+
+        <div class="card game-result-card <?= $was_correct ? 'game-result-correct' : 'game-result-incorrect' ?>">
+            <div class="game-result-badge"><?= $was_correct ? '&#10003;' : '&#10007;' ?></div>
+            <div class="game-result-verdict"><?= $was_correct ? 'Correct' : 'Incorrect' ?></div>
+
+            <div class="game-result-compare">
+                <div class="game-result-item">
+                    <div class="game-result-item-name"><?= htmlspecialchars($lg['prev_item']) ?></div>
+                    <div class="game-result-item-price">$<?= number_format($lg['prev_price'], 2) ?></div>
+                </div>
+                <div class="game-result-arrow"><?= $lg['guess'] === 'higher' ? '&rarr;' : '&larr;' ?></div>
+                <div class="game-result-item">
+                    <div class="game-result-item-name"><?= htmlspecialchars($lg['next_item']) ?></div>
+                    <div class="game-result-item-price">$<?= number_format($lg['next_price'], 2) ?></div>
+                </div>
+            </div>
+
+            <div class="game-result-detail">
+                You said <strong><?= $lg['guess'] === 'higher' ? 'Higher &#8593;' : 'Lower &#8595;' ?></strong>
+                &mdash; <?= $was_correct ? 'price went ' . ($lg['guess'] === 'higher' ? 'up' : 'down') : 'price went ' . ($lg['guess'] === 'higher' ? 'down' : 'up') ?>
+                by <?= $price_diff_fmt ?>
+            </div>
+
+            <form method="POST" action="/itec106/game.php">
+                <button type="submit" name="continue" value="1" class="btn btn-blue game-continue-btn">Continue</button>
+            </form>
         </div>
 
     <?php elseif (empty($_SESSION['current_asset'])): ?>

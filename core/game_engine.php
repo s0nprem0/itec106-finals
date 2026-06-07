@@ -37,6 +37,7 @@ function initGame($pdo, $difficulty = 'medium') {
     $_SESSION['next_asset'] = getRandomAsset($pdo, $_SESSION['current_asset']['id'], $config['volatility']);
     $_SESSION['round'] = 1;
     $_SESSION['game_over'] = false;
+    unset($_SESSION['last_guess']);
 }
 
 function processGuess($pdo, $guess) {
@@ -48,17 +49,24 @@ function processGuess($pdo, $guess) {
 
     $currentPrice = $_SESSION['current_asset']['current_price'];
     $nextPrice = $_SESSION['next_asset']['current_price'];
-    $result = null;
 
     $isHigher = $nextPrice >= $currentPrice;
     $isLower = $nextPrice <= $currentPrice;
 
+    $_SESSION['last_guess'] = [
+        'prev_item' => $_SESSION['current_asset']['item_name'],
+        'prev_price' => $currentPrice,
+        'next_item' => $_SESSION['next_asset']['item_name'],
+        'next_price' => $nextPrice,
+        'guess' => $guess,
+    ];
+
     if (($guess === "higher" && $isHigher) || ($guess === "lower" && $isLower)) {
         $_SESSION['score'] += 1;
-        $result = "correct";
+        $_SESSION['last_guess']['result'] = 'correct';
     } else {
         $_SESSION['lives'] -= 1;
-        $result = "incorrect";
+        $_SESSION['last_guess']['result'] = 'incorrect';
     }
 
     if ($_SESSION['lives'] <= 0) {

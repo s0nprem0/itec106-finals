@@ -304,6 +304,14 @@ input[type="date"] {
     color: var(--macchiato-green);
 }
 
+.game-over-record {
+    color: #eed49f;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
 .game-over-desc {
     color: var(--macchiato-subtext);
     margin-bottom: 2rem;
@@ -320,6 +328,105 @@ input[type="date"] {
 .game-over-btn {
     font-size: 1.1rem;
     padding: 0.85rem 1.5rem;
+}
+
+.game-result-card {
+    max-width: 520px;
+    margin: 2rem auto;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    border-left: 4px solid;
+}
+
+.game-result-correct {
+    border-color: var(--macchiato-green);
+}
+
+.game-result-incorrect {
+    border-color: var(--macchiato-red);
+}
+
+.game-result-badge {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.game-result-correct .game-result-badge {
+    color: var(--macchiato-green);
+}
+
+.game-result-incorrect .game-result-badge {
+    color: var(--macchiato-red);
+}
+
+.game-result-verdict {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+}
+
+.game-result-correct .game-result-verdict {
+    color: var(--macchiato-green);
+}
+
+.game-result-incorrect .game-result-verdict {
+    color: var(--macchiato-red);
+}
+
+.game-result-compare {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.game-result-item {
+    flex: 1;
+    max-width: 180px;
+    background-color: var(--macchiato-base);
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.game-result-item-name {
+    font-size: 0.75rem;
+    color: var(--macchiato-subtext);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-result-item-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--macchiato-blue);
+}
+
+.game-result-arrow {
+    font-size: 1.5rem;
+    color: var(--macchiato-subtext);
+    flex-shrink: 0;
+}
+
+.game-result-detail {
+    font-size: 0.85rem;
+    color: var(--macchiato-subtext);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.game-result-detail strong {
+    color: var(--macchiato-text);
+}
+
+.game-continue-btn {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
 }
 
 .game-start-card {
@@ -401,6 +508,10 @@ input[type="date"] {
     color: var(--macchiato-text);
 }
 
+.game-hud-best {
+    color: #eed49f;
+}
+
 .game-hud-diff {
     font-size: 0.75rem;
     font-weight: 700;
@@ -452,6 +563,23 @@ input[type="date"] {
 
 .game-instructions-content strong {
     color: var(--macchiato-text);
+}
+
+.game-instructions-keys {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--macchiato-subtext);
+}
+
+.game-instructions-keys kbd {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    background-color: var(--macchiato-base);
+    border: 1px solid #494d64;
+    font-family: monospace;
+    font-size: 0.8rem;
 }
 
 .game-board {

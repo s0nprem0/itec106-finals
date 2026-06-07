@@ -22,6 +22,10 @@ $diffClass = match($diff) {
         <span class="game-hud-value"><?= $score ?></span>
     </div>
     <div class="game-hud-item">
+        <span class="game-hud-label">Best</span>
+        <span class="game-hud-value game-hud-best"><?= $best_streak ?: '&mdash;' ?></span>
+    </div>
+    <div class="game-hud-item">
         <span class="game-hud-label">Round</span>
         <span class="game-hud-value"><?= $round ?></span>
     </div>
@@ -44,6 +48,7 @@ $diffClass = match($diff) {
     <div class="game-instructions-content">
         <strong>How to Play:</strong> You'll see a hardware item with a price. Guess whether the <em>next</em> item will cost <strong>higher</strong> or <strong>lower</strong>. Correct guesses extend your streak. Three wrong guesses and it's game over.
         Current volatility: <strong><?= $diffDesc ?></strong>.
+        <span class="game-instructions-keys">Keyboard: <kbd>H</kbd> Higher &middot; <kbd>L</kbd> Lower</span>
     </div>
 </div>
 <?php endif; ?>
@@ -76,13 +81,22 @@ $diffClass = match($diff) {
     <p class="game-prompt">Will the next item cost more or less?</p>
 
     <div class="game-actions">
-        <form method="POST" action="/itec106/game.php">
+        <form method="POST" action="/itec106/game.php" id="form-higher">
             <input type="hidden" name="guess" value="higher">
             <button type="submit" class="btn btn-green game-btn">↑ Higher</button>
         </form>
-        <form method="POST" action="/itec106/game.php">
+        <form method="POST" action="/itec106/game.php" id="form-lower">
             <input type="hidden" name="guess" value="lower">
             <button type="submit" class="btn btn-red game-btn">↓ Lower</button>
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    var key = e.key.toLowerCase();
+    if (key === 'h') document.getElementById('form-higher').querySelector('button').click();
+    if (key === 'l') document.getElementById('form-lower').querySelector('button').click();
+});
+</script>
