@@ -312,6 +312,23 @@ input[type="date"] {
     letter-spacing: 1px;
 }
 
+.game-over-keys {
+    color: var(--macchiato-subtext);
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.game-over-keys kbd {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    background-color: var(--macchiato-base);
+    border: 1px solid #494d64;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--macchiato-text);
+}
+
 .game-over-desc {
     color: var(--macchiato-subtext);
     margin-bottom: 2rem;
@@ -427,6 +444,23 @@ input[type="date"] {
 .game-continue-btn {
     padding: 0.75rem 2rem;
     font-size: 1rem;
+}
+
+.game-result-keys {
+    color: var(--macchiato-subtext);
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.game-result-keys kbd {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    background-color: var(--macchiato-base);
+    border: 1px solid #494d64;
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--macchiato-text);
 }
 
 .game-start-card {

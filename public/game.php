@@ -67,10 +67,12 @@ require_once __DIR__ . '/../views/partials/header.php';
                 Connection terminated. Your performance data has been securely logged to the mainframe.
             </p>
 
+            <p class="game-over-keys">Keyboard: <kbd>E</kbd> Easy &middot; <kbd>M</kbd> Medium &middot; <kbd>H</kbd> Hard &middot; <kbd>R</kbd> Start Screen</p>
+
             <div class="game-over-actions">
-                <a href="/itec106/game.php?restart=true&difficulty=easy" class="btn btn-green game-over-btn">Reboot (Easy)</a>
-                <a href="/itec106/game.php?restart=true&difficulty=medium" class="btn btn-blue game-over-btn">Reboot (Medium)</a>
-                <a href="/itec106/game.php?restart=true&difficulty=hard" class="btn btn-red game-over-btn">Reboot (Hard)</a>
+                <a href="/itec106/game.php?restart=true&difficulty=easy" class="btn btn-green game-over-btn" id="reboot-easy">Reboot (Easy)</a>
+                <a href="/itec106/game.php?restart=true&difficulty=medium" class="btn btn-blue game-over-btn" id="reboot-medium">Reboot (Medium)</a>
+                <a href="/itec106/game.php?restart=true&difficulty=hard" class="btn btn-red game-over-btn" id="reboot-hard">Reboot (Hard)</a>
             </div>
         </div>
 
@@ -104,7 +106,9 @@ require_once __DIR__ . '/../views/partials/header.php';
                 by <?= $price_diff_fmt ?>
             </div>
 
-            <form method="POST" action="/itec106/game.php">
+            <p class="game-result-keys">Press <kbd>Enter</kbd> or <kbd>Space</kbd> to continue &middot; <kbd>R</kbd> Restart</p>
+
+            <form method="POST" action="/itec106/game.php" id="form-continue">
                 <button type="submit" name="continue" value="1" class="btn btn-blue game-continue-btn">Continue</button>
             </form>
         </div>
@@ -136,3 +140,27 @@ require_once __DIR__ . '/../views/partials/header.php';
 </div>
 
 <?php require_once __DIR__ . '/../views/partials/footer.php'; ?>
+
+<script>
+document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    var key = e.key.toLowerCase();
+
+    var cont = document.getElementById('form-continue');
+    if (cont && (key === 'enter' || key === ' ')) {
+        cont.querySelector('button').click();
+        return;
+    }
+
+    if (key === 'r') {
+        window.location.href = '/itec106/game.php?restart=true';
+        return;
+    }
+
+    var btn;
+    if (key === 'e') btn = document.getElementById('reboot-easy');
+    if (key === 'm') btn = document.getElementById('reboot-medium');
+    if (key === 'h') btn = document.getElementById('reboot-hard');
+    if (btn) btn.click();
+});
+</script>
