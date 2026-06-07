@@ -13,7 +13,7 @@ $validation_errors = [];
 $password_errors = [];
 $delete_errors = [];
 
-$stmt = $pdo->prepare("SELECT username, first_name, surname, email_addr, birthdate FROM accounts WHERE acct_id = ?");
+$stmt = $pdo->prepare("SELECT username, first_name, surname, email_addr, birthdate, role FROM accounts WHERE acct_id = ?");
 $stmt->execute([$acct_id]);
 $user = $stmt->fetch();
 
@@ -131,146 +131,158 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 require_once __DIR__ . '/../views/partials/header.php';
+
+$initials = strtoupper(
+    mb_substr($user['first_name'] ?? '?', 0, 1) .
+    mb_substr($user['surname'] ?? '?', 0, 1)
+);
+$role_label = ucfirst($user['role'] ?? 'player');
 ?>
 
 <div class="settings-page">
 
     <div class="settings-header">
         <h1 class="settings-title">Account Settings</h1>
-        <p class="settings-subtitle">Update your personal information and password.</p>
+        <p class="settings-subtitle">Manage your profile, security, and account.</p>
     </div>
 
     <?php if ($flash): ?>
         <div class="admin-msg admin-msg-<?= $flash['type'] ?>">[<?= $flash['type'] === 'success' ? '&#10003;' : '&#33;' ?>] <?= htmlspecialchars($flash['text']) ?></div>
     <?php endif; ?>
 
-    <?php if (!empty($validation_errors)): ?>
-        <div class="admin-msg admin-msg-error">
-            &#33; <?= implode('<br>&#33; ', array_map('htmlspecialchars', $validation_errors)) ?>
-        </div>
-    <?php endif; ?>
+    <div class="settings-bento-grid">
 
-    <div class="card settings-card">
-        <h2 class="settings-card-title">Personal Information</h2>
+        <div class="card settings-card settings-card-main">
+            <h2 class="settings-card-title">Personal Information</h2>
 
-        <form class="settings-form" method="POST" action="<?= BASE_URL ?>/settings.php">
-            <div class="admin-form-row">
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="first_name">First Name</label>
-                    <input class="admin-form-input" type="text" id="first_name" name="first_name" required
-                           value="<?= htmlspecialchars($_POST['first_name'] ?? $user['first_name']) ?>">
+            <?php if (!empty($validation_errors)): ?>
+                <div class="admin-msg admin-msg-error">
+                    &#33; <?= implode('<br>&#33; ', array_map('htmlspecialchars', $validation_errors)) ?>
                 </div>
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="surname">Surname</label>
-                    <input class="admin-form-input" type="text" id="surname" name="surname" required
-                           value="<?= htmlspecialchars($_POST['surname'] ?? $user['surname']) ?>">
-                </div>
-            </div>
+            <?php endif; ?>
 
-            <div class="admin-form-row">
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="email_addr">Email</label>
-                    <input class="admin-form-input" type="email" id="email_addr" name="email_addr" required
-                           value="<?= htmlspecialchars($_POST['email_addr'] ?? $user['email_addr']) ?>">
-                </div>
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="username">Username</label>
-                    <input class="admin-form-input" type="text" id="username" name="username" required
-                           value="<?= htmlspecialchars($_POST['username'] ?? $user['username']) ?>">
-                </div>
-            </div>
-
-            <div class="admin-form-row">
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="birthdate">Birthdate</label>
-                    <input class="admin-form-input" type="date" id="birthdate" name="birthdate" required
-                           value="<?= htmlspecialchars($_POST['birthdate'] ?? $user['birthdate']) ?>">
-                </div>
-            </div>
-
-            <div class="settings-actions">
-                <button type="submit" class="btn btn-blue">Save Changes</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="card settings-card">
-        <h2 class="settings-card-title">Change Password</h2>
-
-        <?php if (!empty($password_errors)): ?>
-            <div class="admin-msg admin-msg-error">
-                &#33; <?= implode('<br>&#33; ', array_map('htmlspecialchars', $password_errors)) ?>
-            </div>
-        <?php endif; ?>
-
-        <form class="settings-form" method="POST" action="<?= BASE_URL ?>/settings.php">
-            <div class="admin-form-row">
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="current_password">Current Password</label>
-                    <input class="admin-form-input" type="password" id="current_password" name="current_password" required>
-                </div>
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="new_password">New Password</label>
-                    <input class="admin-form-input" type="password" id="new_password" name="new_password" minlength="6" required title="At least 6 characters">
-                    <div id="password-strength" class="password-strength">
-                        <div class="password-strength-bar">
-                            <div class="password-strength-fill" id="strength-fill"></div>
-                        </div>
-                        <span class="password-strength-text" id="strength-text"></span>
+            <form class="settings-form" method="POST" action="<?= BASE_URL ?>/settings.php">
+                <div class="admin-form-row">
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="first_name">First Name</label>
+                        <input class="admin-form-input" type="text" id="first_name" name="first_name" required
+                               value="<?= htmlspecialchars($_POST['first_name'] ?? $user['first_name']) ?>">
+                    </div>
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="surname">Surname</label>
+                        <input class="admin-form-input" type="text" id="surname" name="surname" required
+                               value="<?= htmlspecialchars($_POST['surname'] ?? $user['surname']) ?>">
                     </div>
                 </div>
-            </div>
 
-            <div class="admin-form-row">
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="confirm_password">Confirm New Password</label>
-                    <input class="admin-form-input" type="password" id="confirm_password" name="confirm_password" minlength="6" required title="At least 6 characters">
+                <div class="admin-form-row">
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="email_addr">Email</label>
+                        <input class="admin-form-input" type="email" id="email_addr" name="email_addr" required
+                               value="<?= htmlspecialchars($_POST['email_addr'] ?? $user['email_addr']) ?>">
+                    </div>
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="username">Username</label>
+                        <input class="admin-form-input" type="text" id="username" name="username" required
+                               value="<?= htmlspecialchars($_POST['username'] ?? $user['username']) ?>">
+                    </div>
                 </div>
-            </div>
 
-            <div class="settings-actions">
-                <input type="hidden" name="change_password" value="1">
-                <button type="submit" class="btn btn-blue">Change Password</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="card settings-card settings-card-danger">
-        <h2 class="settings-card-title settings-card-title-danger">Delete Account</h2>
-
-        <?php if (!empty($delete_errors)): ?>
-            <div class="admin-msg admin-msg-error">
-                &#33; <?= implode('<br>&#33; ', array_map('htmlspecialchars', $delete_errors)) ?>
-            </div>
-        <?php endif; ?>
-
-        <form class="settings-form" method="POST" action="<?= BASE_URL ?>/settings.php" onsubmit="return confirm('This will permanently delete your account. Are you sure?');">
-            <p class="settings-delete-warning">
-                This will permanently delete your account and all associated data
-                (game history, session tokens, etc.). This action cannot be undone.
-            </p>
-
-            <div class="admin-form-row">
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="del_password">Enter Current Password to Confirm</label>
-                    <input class="admin-form-input" type="password" id="del_password" name="del_password" required
-                           placeholder="Current password">
+                <div class="admin-form-row">
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="birthdate">Birthdate</label>
+                        <input class="admin-form-input" type="date" id="birthdate" name="birthdate" required
+                               value="<?= htmlspecialchars($_POST['birthdate'] ?? $user['birthdate']) ?>">
+                    </div>
                 </div>
-            </div>
 
-            <div class="admin-form-row">
-                <div class="admin-form-group">
-                    <label class="admin-form-label" for="del_confirm">Type <strong>DELETE</strong> to confirm</label>
-                    <input class="admin-form-input" type="text" id="del_confirm" name="del_confirm" required
-                           placeholder="Type DELETE here" pattern="DELETE" title="Type DELETE exactly">
+                <div class="settings-actions">
+                    <button type="submit" class="btn btn-blue">Save Changes</button>
                 </div>
+            </form>
+        </div>
+
+        <div class="settings-side">
+
+            <div class="card settings-card settings-card-snapshot">
+                <div class="settings-snapshot-avatar"><?= htmlspecialchars($initials) ?></div>
+                <div class="settings-snapshot-name"><?= htmlspecialchars($user['username']) ?></div>
+                <span class="settings-snapshot-role settings-snapshot-role-<?= $user['role'] ?>"><?= $role_label ?></span>
             </div>
 
-            <div class="settings-actions">
-                <input type="hidden" name="delete_account" value="1">
-                <button type="submit" class="btn btn-red">Delete My Account</button>
+            <div class="card settings-card settings-card-password">
+                <h2 class="settings-card-title">Change Password</h2>
+
+                <?php if (!empty($password_errors)): ?>
+                    <div class="admin-msg admin-msg-error">
+                        &#33; <?= implode('<br>&#33; ', array_map('htmlspecialchars', $password_errors)) ?>
+                    </div>
+                <?php endif; ?>
+
+                <form class="settings-form" method="POST" action="<?= BASE_URL ?>/settings.php">
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="current_password">Current Password</label>
+                        <input class="admin-form-input" type="password" id="current_password" name="current_password" required>
+                    </div>
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="new_password">New Password</label>
+                        <input class="admin-form-input" type="password" id="new_password" name="new_password" minlength="6" required title="At least 6 characters">
+                        <div id="password-strength" class="password-strength">
+                            <div class="password-strength-bar">
+                                <div class="password-strength-fill" id="strength-fill"></div>
+                            </div>
+                            <span class="password-strength-text" id="strength-text"></span>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="confirm_password">Confirm New Password</label>
+                        <input class="admin-form-input" type="password" id="confirm_password" name="confirm_password" minlength="6" required title="At least 6 characters">
+                    </div>
+
+                    <div class="settings-actions">
+                        <input type="hidden" name="change_password" value="1">
+                        <button type="submit" class="btn btn-blue">Change Password</button>
+                    </div>
+                </form>
             </div>
-        </form>
+
+        </div>
+
+        <div class="card settings-card settings-card-full settings-card-danger">
+            <h2 class="settings-card-title settings-card-title-danger">Delete Account</h2>
+
+            <?php if (!empty($delete_errors)): ?>
+                <div class="admin-msg admin-msg-error">
+                    &#33; <?= implode('<br>&#33; ', array_map('htmlspecialchars', $delete_errors)) ?>
+                </div>
+            <?php endif; ?>
+
+            <form class="settings-form" method="POST" action="<?= BASE_URL ?>/settings.php" onsubmit="return confirm('This will permanently delete your account. Are you sure?');">
+                <p class="settings-delete-warning">
+                    This will permanently delete your account and all associated data
+                    (game history, session tokens, etc.). This action cannot be undone.
+                </p>
+
+                <div class="admin-form-row">
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="del_password">Enter Current Password to Confirm</label>
+                        <input class="admin-form-input" type="password" id="del_password" name="del_password" required
+                               placeholder="Current password">
+                    </div>
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="del_confirm">Type <strong>DELETE</strong> to confirm</label>
+                        <input class="admin-form-input" type="text" id="del_confirm" name="del_confirm" required
+                               placeholder="Type DELETE here" pattern="DELETE" title="Type DELETE exactly">
+                    </div>
+                </div>
+
+                <div class="settings-actions">
+                    <input type="hidden" name="delete_account" value="1">
+                    <button type="submit" class="btn btn-red">Delete My Account</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 
 </div><?php // close settings-page ?>
