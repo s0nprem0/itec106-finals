@@ -67,7 +67,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 Connection terminated. Your performance data has been securely logged to the mainframe.
             </p>
 
-            <p class="game-over-keys">Keyboard: <kbd>E</kbd> Easy &middot; <kbd>M</kbd> Medium &middot; <kbd>H</kbd> Hard &middot; <kbd>R</kbd> Start Screen</p>
+            <p class="game-over-keys">Keyboard: <kbd>E</kbd> Easy &middot; <kbd>M</kbd> Medium &middot; <kbd>H</kbd> Hard</p>
 
             <div class="game-over-actions">
                 <a href="/itec106/game.php?restart=true&difficulty=easy" class="btn btn-green game-over-btn" id="reboot-easy">Reboot (Easy)</a>
@@ -106,7 +106,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 by <?= $price_diff_fmt ?>
             </div>
 
-            <p class="game-result-keys">Press <kbd>Enter</kbd> or <kbd>Space</kbd> to continue &middot; <kbd>R</kbd> Restart</p>
+            <p class="game-result-keys">Press <kbd>Enter</kbd> or <kbd>Space</kbd> to continue</p>
 
             <form method="POST" action="/itec106/game.php" id="form-continue">
                 <button type="submit" name="continue" value="1" class="btn btn-blue game-continue-btn">Continue</button>
@@ -149,11 +149,6 @@ document.addEventListener('keydown', function(e) {
     var cont = document.getElementById('form-continue');
     if (cont && (key === 'enter' || key === ' ')) {
         cont.querySelector('button').click();
-        return;
-    }
-
-    if (key === 'r') {
-        window.location.href = '/itec106/game.php?restart=true';
         return;
     }
 

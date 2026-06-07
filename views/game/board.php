@@ -48,7 +48,7 @@ $diffClass = match($diff) {
     <div class="game-instructions-content">
         <strong>How to Play:</strong> You'll see a hardware item with a price. Guess whether the <em>next</em> item will cost <strong>higher</strong> or <strong>lower</strong>. Correct guesses extend your streak. Three wrong guesses and it's game over.
         Current volatility: <strong><?= $diffDesc ?></strong>.
-        <span class="game-instructions-keys">Keyboard: <kbd>H</kbd> Higher &middot; <kbd>L</kbd> Lower &middot; <kbd>R</kbd> Restart</span>
+        <span class="game-instructions-keys">Keyboard: <kbd>H</kbd> Higher &middot; <kbd>L</kbd> Lower</span>
     </div>
 </div>
 <?php endif; ?>
@@ -98,6 +98,5 @@ document.addEventListener('keydown', function(e) {
     var key = e.key.toLowerCase();
     if (key === 'h') document.getElementById('form-higher').querySelector('button').click();
     if (key === 'l') document.getElementById('form-lower').querySelector('button').click();
-    if (key === 'r') window.location.href = '/itec106/game.php?restart=true';
 });
 </script>
