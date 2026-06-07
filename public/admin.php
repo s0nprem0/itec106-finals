@@ -21,7 +21,7 @@ $delete_score = null;
 if (isset($_GET['delete_score']) && hasPermission($pdo, 'scores.delete')) {
     $sid = (int)$_GET['delete_score'];
     if ($sid) {
-        $stmt = $pdo->prepare("SELECT s.id, s.streak, a.username FROM scores s JOIN accounts a ON s.acct_id = a.acct_id WHERE s.id = ?");
+        $stmt = $pdo->prepare("SELECT s.id, s.profit, a.username FROM scores s JOIN accounts a ON s.acct_id = a.acct_id WHERE s.id = ?");
         $stmt->execute([$sid]);
         $delete_score = $stmt->fetch();
     }
@@ -147,9 +147,9 @@ try {
         $players = $stmt->fetchAll();
     } elseif ($tab === 'scores') {
         $sort = $_GET['sort'] ?? 'played_at';
-        $allowed_sorts = ['id', 'streak', 'difficulty', 'played_at', 'username'];
+        $allowed_sorts = ['id', 'profit', 'streak', 'difficulty', 'played_at', 'username'];
         if (!in_array($sort, $allowed_sorts)) $sort = 'played_at';
-        $sort_map = ['id' => 's.id', 'streak' => 's.streak', 'difficulty' => 's.difficulty', 'played_at' => 's.played_at', 'username' => 'a.username'];
+        $sort_map = ['id' => 's.id', 'profit' => 's.profit', 'streak' => 's.streak', 'difficulty' => 's.difficulty', 'played_at' => 's.played_at', 'username' => 'a.username'];
         $order = $sort_map[$sort] ?? 's.played_at';
 
         $where = '';
@@ -169,7 +169,7 @@ try {
         $stmt->execute($params);
         $total_filtered = (int)$stmt->fetchColumn();
 
-        $stmt = $pdo->prepare("SELECT s.id, s.streak, s.difficulty, s.played_at, a.username FROM scores s JOIN accounts a ON s.acct_id = a.acct_id $where ORDER BY $order $dir_sql LIMIT $per_page OFFSET $offset");
+        $stmt = $pdo->prepare("SELECT s.id, s.streak, s.profit, s.difficulty, s.played_at, a.username FROM scores s JOIN accounts a ON s.acct_id = a.acct_id $where ORDER BY $order $dir_sql LIMIT $per_page OFFSET $offset");
         $stmt->execute($params);
         $scores = $stmt->fetchAll();
     }
@@ -446,7 +446,7 @@ require_once __DIR__ . '/../views/partials/header.php';
             <div class="card admin-delete-card">
                 <h2 class="admin-form-title">Delete Score Record</h2>
                 <p class="admin-delete-text">
-                    Are you sure you want to permanently remove <strong class="admin-delete-name"><?= htmlspecialchars($delete_score['username']) ?></strong>'s streak of <strong><?= $delete_score['streak'] ?></strong> from the database?
+                    Are you sure you want to permanently remove <strong class="admin-delete-name"><?= htmlspecialchars($delete_score['username']) ?></strong>'s profit of <strong>$<?= number_format(abs($delete_score['profit'] ?? 0), 2) ?></strong> from the database?
                 </p>
                 <form method="POST" action="<?= BASE_URL ?>/admin.php?tab=scores">
                     <input type="hidden" name="action" value="delete_score">
@@ -496,8 +496,8 @@ require_once __DIR__ . '/../views/partials/header.php';
                         <th class="admin-th <?= $ssort === 'username' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
                             <a href="<?= BASE_URL ?>/admin.php?tab=scores&sort=username&dir=<?= $ssort === 'username' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Player <?= $ssort === 'username' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
-                        <th class="admin-th <?= $ssort === 'streak' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
-                            <a href="<?= BASE_URL ?>/admin.php?tab=scores&sort=streak&dir=<?= $ssort === 'streak' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Streak <?= $ssort === 'streak' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
+                        <th class="admin-th <?= $ssort === 'profit' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
+                            <a href="<?= BASE_URL ?>/admin.php?tab=scores&sort=profit&dir=<?= $ssort === 'profit' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Profit <?= $ssort === 'profit' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
                         </th>
                         <th class="admin-th <?= $ssort === 'difficulty' ? 'admin-th-sort-active' : '' ?> admin-th-sortable">
                             <a href="<?= BASE_URL ?>/admin.php?tab=scores&sort=difficulty&dir=<?= $ssort === 'difficulty' && $sdir === 'asc' ? 'desc' : 'asc' ?>&search=<?= urlencode($search) ?>&difficulty=<?= urlencode($diff_filter) ?>">Difficulty <?= $ssort === 'difficulty' ? ($sdir === 'asc' ? '▲' : '▼') : '' ?></a>
@@ -513,7 +513,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         <tr>
                             <td class="admin-td admin-td-id">#<?= $s['id'] ?></td>
                             <td class="admin-td admin-item-name"><?= htmlspecialchars($s['username']) ?></td>
-                            <td class="admin-td lb-streak admin-td-streak"><?= $s['streak'] ?></td>
+                            <td class="admin-td <?= ($s['profit'] ?? 0) >= 0 ? 'game-profit-positive' : 'game-profit-negative' ?>"><?= ($s['profit'] ?? 0) >= 0 ? '+' : '' ?>$<?= number_format(abs($s['profit'] ?? 0), 2) ?></td>
                             <td class="admin-td">
                                 <?php
                                 $diffClass = match($s['difficulty'] ?? 'medium') {

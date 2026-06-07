@@ -35,15 +35,23 @@ try {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT MAX(streak) FROM scores WHERE acct_id = ?");
+    $stmt = $pdo->prepare("SELECT COALESCE(MAX(profit), 0) FROM scores WHERE acct_id = ? AND profit IS NOT NULL");
     $stmt->execute([$acct_id]);
-    $best_streak = (int)$stmt->fetchColumn();
+    $best_profit = (float)$stmt->fetchColumn();
 } catch (PDOException $e) {
-    $best_streak = 0;
+    $best_profit = 0;
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT streak, difficulty, played_at FROM scores WHERE acct_id = ? ORDER BY played_at DESC LIMIT 10");
+    $stmt = $pdo->prepare("SELECT COALESCE(SUM(profit), 0) FROM scores WHERE acct_id = ? AND profit IS NOT NULL");
+    $stmt->execute([$acct_id]);
+    $total_profit = (float)$stmt->fetchColumn();
+} catch (PDOException $e) {
+    $total_profit = 0;
+}
+
+try {
+    $stmt = $pdo->prepare("SELECT profit, difficulty, played_at FROM scores WHERE acct_id = ? ORDER BY played_at DESC LIMIT 10");
     $stmt->execute([$acct_id]);
     $recent_scores = $stmt->fetchAll();
 } catch (PDOException $e) {
@@ -112,8 +120,12 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <div class="admin-stat-value"><?= $total_games ?></div>
             </div>
             <div class="card profile-stat profile-stat-green">
-                <p class="admin-stat-label">Best Streak</p>
-                <div class="admin-stat-value"><?= $best_streak ?></div>
+                <p class="admin-stat-label">Total Profit</p>
+                <div class="admin-stat-value <?= $total_profit >= 0 ? 'game-profit-positive' : 'game-profit-negative' ?>"><?= $total_profit >= 0 ? '+' : '' ?>$<?= number_format(abs($total_profit), 0) ?></div>
+            </div>
+            <div class="card profile-stat profile-stat-purple">
+                <p class="admin-stat-label">Best Game</p>
+                <div class="admin-stat-value <?= $best_profit >= 0 ? 'game-profit-positive' : 'game-profit-negative' ?>"><?= $best_profit >= 0 ? '+' : '' ?>$<?= number_format(abs($best_profit), 0) ?></div>
             </div>
         </div>
 
@@ -123,7 +135,7 @@ require_once __DIR__ . '/../views/partials/header.php';
             <table class="profile-table">
                 <thead>
                     <tr>
-                        <th class="admin-th">Streak</th>
+                        <th class="admin-th">Profit</th>
                         <th class="admin-th">Difficulty</th>
                         <th class="admin-th profile-th-right">Played At</th>
                     </tr>
@@ -136,9 +148,10 @@ require_once __DIR__ . '/../views/partials/header.php';
                             'hard' => 'lb-diff-hard',
                             default => 'lb-diff-medium',
                         };
+                        $is_pos = ($s['profit'] ?? 0) >= 0;
                         ?>
                         <tr>
-                            <td class="admin-td lb-streak"><?= (int)$s['streak'] ?></td>
+                            <td class="admin-td <?= $is_pos ? 'game-profit-positive' : 'game-profit-negative' ?>"><?= $is_pos ? '+' : '' ?>$<?= number_format(abs($s['profit'] ?? 0), 0) ?></td>
                             <td class="admin-td"><span class="lb-diff-badge <?= $dc ?>"><?= htmlspecialchars(ucfirst($s['difficulty'] ?? 'Medium')) ?></span></td>
                             <td class="admin-td profile-td-right"><?= date('M j, Y g:i A', strtotime($s['played_at'])) ?></td>
                         </tr>

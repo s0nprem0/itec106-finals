@@ -53,7 +53,8 @@ CREATE TABLE auth_tokens (
 CREATE TABLE scores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     acct_id INT NOT NULL,   -- references your account ID
-    streak INT NOT NULL,              -- number of correct guesses in a row
+    streak INT NOT NULL,              -- number of correct guesses in a row (unused in money mode)
+    profit DECIMAL(10,2) DEFAULT NULL, -- final profit for money-based game mode
     difficulty VARCHAR(10) NOT NULL DEFAULT 'medium', -- difficulty level: easy, medium, hard
     played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (acct_id)

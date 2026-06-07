@@ -11,7 +11,7 @@ if (isset($_GET['restart'])) {
     if ($diff && isset(DIFFICULTIES[$diff])) {
         initGame($pdo, $diff);
     } else {
-        unset($_SESSION['current_asset'], $_SESSION['next_asset'], $_SESSION['score'], $_SESSION['lives'], $_SESSION['round'], $_SESSION['game_over'], $_SESSION['last_guess']);
+        unset($_SESSION['current_asset'], $_SESSION['next_asset'], $_SESSION['balance'], $_SESSION['round'], $_SESSION['game_over'], $_SESSION['game_won'], $_SESSION['last_guess'], $_SESSION['total_bet'], $_SESSION['total_won'], $_SESSION['start_money'], $_SESSION['final_profit']);
     }
     session_write_close();
     header("Location: " . BASE_URL . "/game.php");
@@ -23,30 +23,28 @@ if (empty($_SESSION['current_asset']) && $_SERVER['REQUEST_METHOD'] === 'POST' &
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guess'])) {
-    processGuess($pdo, $_POST['guess'], $_SESSION['acct_id']);
+    $bet = filter_var($_POST['bet'] ?? 0, FILTER_VALIDATE_FLOAT);
+    $result = processGuess($pdo, $_POST['guess'], $_SESSION['acct_id'], $bet);
+    if (!empty($result['error'])) {
+        $_SESSION['guess_error'] = $result['error'];
+    }
     session_write_close();
     header("Location: " . BASE_URL . "/game.php");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['continue'])) {
-    unset($_SESSION['last_guess']);
+    unset($_SESSION['last_guess'], $_SESSION['guess_error']);
     session_write_close();
     header("Location: " . BASE_URL . "/game.php");
     exit;
 }
 
-$best_streak = 0;
-try {
-    $stmt = $pdo->prepare("SELECT COALESCE(MAX(streak), 0) FROM scores WHERE acct_id = ?");
-    $stmt->execute([$_SESSION['acct_id']]);
-    $best_streak = (int)$stmt->fetchColumn();
-} catch (PDOException $e) {
-    $best_streak = 0;
-}
-
 $is_new_record = !empty($_SESSION['is_new_record']);
 unset($_SESSION['is_new_record']);
+
+$guess_error = $_SESSION['guess_error'] ?? null;
+unset($_SESSION['guess_error']);
 
 require_once __DIR__ . '/../views/partials/header.php';
 ?>
@@ -55,27 +53,49 @@ require_once __DIR__ . '/../views/partials/header.php';
 
     <?php if (!empty($_SESSION['game_over'])): ?>
 
+        <?php if (!empty($_SESSION['game_won'])): ?>
+        <div class="card game-over-card game-won-card">
+            <h1 class="game-over-title game-won-title">Target Acquired</h1>
+            <p class="game-won-subtitle">You reached the $<?= number_format(WIN_TARGET) ?> target!</p>
+        <?php else: ?>
         <div class="card game-over-card">
             <h1 class="game-over-title">System Failure</h1>
+            <p class="game-over-desc">Your funds have been depleted. Connection terminated.</p>
+        <?php endif; ?>
 
-            <h2 class="game-over-score">
-                Final Intelligence Streak: <span class="game-over-streak"><?= $_SESSION['score'] ?></span>
-            </h2>
+            <div class="game-over-stats">
+                <div class="game-over-stat">
+                    <span class="game-over-stat-label">Final Balance</span>
+                    <span class="game-over-stat-value <?= ($_SESSION['final_profit'] ?? 0) >= 0 ? 'game-profit-positive' : 'game-profit-negative' ?>">
+                        $<?= number_format($_SESSION['balance'] ?? 0, 2) ?>
+                    </span>
+                </div>
+                <div class="game-over-stat">
+                    <span class="game-over-stat-label">Profit / Loss</span>
+                    <span class="game-over-stat-value <?= ($_SESSION['final_profit'] ?? 0) >= 0 ? 'game-profit-positive' : 'game-profit-negative' ?>">
+                        <?= ($_SESSION['final_profit'] ?? 0) >= 0 ? '+' : '' ?>$<?= number_format(abs($_SESSION['final_profit'] ?? 0), 2) ?>
+                    </span>
+                </div>
+                <div class="game-over-stat">
+                    <span class="game-over-stat-label">Rounds Played</span>
+                    <span class="game-over-stat-value"><?= $_SESSION['round'] ?? 0 ?></span>
+                </div>
+                <div class="game-over-stat">
+                    <span class="game-over-stat-label">Total Wagered</span>
+                    <span class="game-over-stat-value">$<?= number_format($_SESSION['total_bet'] ?? 0, 2) ?></span>
+                </div>
+            </div>
 
             <?php if ($is_new_record): ?>
-                <p class="game-over-record">&#9733; New Personal Record! &#9733;</p>
+                <p class="game-over-record">&#9733; <?= $_SESSION['game_won'] ? 'New Best Profit!' : 'New Worst Loss!' ?> &#9733;</p>
             <?php endif; ?>
-
-            <p class="game-over-desc">
-                Connection terminated. Your performance data has been securely logged to the mainframe.
-            </p>
 
             <p class="game-over-keys">Keyboard: <kbd>E</kbd> Easy &middot; <kbd>M</kbd> Medium &middot; <kbd>H</kbd> Hard</p>
 
             <div class="game-over-actions">
-                <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=easy" class="btn btn-green game-over-btn" id="reboot-easy">Reboot (Easy)</a>
-                <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=medium" class="btn btn-blue game-over-btn" id="reboot-medium">Reboot (Medium)</a>
-                <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=hard" class="btn btn-red game-over-btn" id="reboot-hard">Reboot (Hard)</a>
+                <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=easy" class="btn btn-green game-over-btn" id="reboot-easy">New Game (Easy)</a>
+                <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=medium" class="btn btn-blue game-over-btn" id="reboot-medium">New Game (Medium)</a>
+                <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=hard" class="btn btn-red game-over-btn" id="reboot-hard">New Game (Hard)</a>
             </div>
         </div>
 
@@ -109,6 +129,15 @@ require_once __DIR__ . '/../views/partials/header.php';
                 by <?= $price_diff_fmt ?>
             </div>
 
+            <div class="game-result-bet-info">
+                Bet: <strong>$<?= number_format($lg['bet'], 2) ?></strong>
+                &times; <?= $lg['multiplier'] ?>x
+                &rarr;
+                <span class="<?= $was_correct ? 'game-profit-positive' : 'game-profit-negative' ?>">
+                    <?= $was_correct ? '+' : '' ?>$<?= number_format(abs($lg['net']), 2) ?>
+                </span>
+            </div>
+
             <p class="game-result-keys">Press <kbd>Enter</kbd> or <kbd>Space</kbd> to continue</p>
 
             <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-continue">
@@ -121,15 +150,17 @@ require_once __DIR__ . '/../views/partials/header.php';
         <div class="card game-start-card">
             <h1 class="game-start-title">Mission Briefing</h1>
             <p class="game-start-desc">
-                Guess whether the next hardware component's price will be higher or lower. Three errors and your connection is terminated.
+                Start with a capital fund and predict hardware price movements to grow your wealth.
+                Reach $<?= number_format(WIN_TARGET) ?> to win. Lose it all and your run is over.
             </p>
+            <p class="game-start-disclaimer">All in-game currency is virtual and has no real-world value.</p>
 
             <form class="game-diff-form" method="POST" action="<?= BASE_URL ?>/game.php">
-                <label class="game-diff-label">Select Difficulty:</label>
+                <label class="game-diff-label">Select Difficulty &amp; Starting Capital:</label>
                 <div class="game-diff-options">
-                    <button type="submit" name="difficulty" value="easy"   class="btn btn-green game-diff-btn">Easy ±10%</button>
-                    <button type="submit" name="difficulty" value="medium" class="btn btn-blue  game-diff-btn">Medium ±20%</button>
-                    <button type="submit" name="difficulty" value="hard"   class="btn btn-red   game-diff-btn">Hard ±35%</button>
+                    <button type="submit" name="difficulty" value="easy"   class="btn btn-green game-diff-btn">Easy &middot; $15,000 &middot; 1.5x</button>
+                    <button type="submit" name="difficulty" value="medium" class="btn btn-blue  game-diff-btn">Medium &middot; $10,000 &middot; 2.0x</button>
+                    <button type="submit" name="difficulty" value="hard"   class="btn btn-red   game-diff-btn">Hard &middot; $5,000 &middot; 3.0x</button>
                 </div>
             </form>
         </div>
@@ -139,6 +170,8 @@ require_once __DIR__ . '/../views/partials/header.php';
         <?php require_once __DIR__ . '/../views/game/board.php'; ?>
 
     <?php endif; ?>
+
+    <p class="game-legal-note">All in-game currency is virtual and has no real-world value.</p>
 
 </div>
 
