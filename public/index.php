@@ -41,70 +41,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/../views/partials/header.php';
 ?>
 
-<div class="auth-wrapper">
-    <div class="auth-card">
-        <div class="card">
-            <div class="auth-header">
-                <div class="auth-logo">TS</div>
-                <div class="auth-title">Welcome Back</div>
-                <div class="auth-subtitle">Sign in to continue to Tech Spec Showdown</div>
+<div class="auth-container">
+    <div class="card auth-card">
+        <h2 class="auth-title">Sign In</h2>
+        
+        <?php if ($error): ?>
+            <div class="auth-error">
+                <?= htmlspecialchars($error) ?>
             </div>
-            
-            <?php if ($error): ?>
-                <div class="auth-error">
-                    <span>!</span>
-                    <span><?= htmlspecialchars($error) ?></span>
-                </div>
-            <?php endif; ?>
+        <?php endif; ?>
 
-            <form id="loginForm" method="POST" action="/itec106/index.php" novalidate>
-                <div class="auth-field">
-                    <label class="auth-label" for="username">Username</label>
-                    <input class="auth-input" type="text" id="username" name="username" placeholder="Your username" required autocomplete="username" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
-                </div>
-                
-                <div class="auth-field">
-                    <label class="auth-label" for="password">Password</label>
-                    <div class="auth-input-wrapper">
-                        <input class="auth-input" type="password" id="password" name="password" placeholder="Your password" required autocomplete="current-password">
-                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility" tabindex="-1">&#128065;</button>
-                    </div>
-                </div>
-                
-                <button type="submit" class="auth-btn" id="loginBtn">
-                    <span class="btn-text">Sign In</span>
-                    <span class="spinner"></span>
-                </button>
-            </form>
+        <form class="auth-form" method="POST" action="/itec106/index.php">
+            <input class="auth-input" type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
+            <input class="auth-input" type="password" name="password" placeholder="Password" required>
+            <button type="submit" class="btn btn-blue">Sign In</button>
+        </form>
 
-            <div class="auth-footer">
-                Need an account? <a href="/itec106/register.php">Register</a>
-            </div>
-        </div>
+        <p class="auth-footer">
+            No account? <a href="/itec106/register.php">Register</a>
+        </p>
     </div>
 </div>
-
-<script>
-(function() {
-    const form = document.getElementById('loginForm');
-    const btn = document.getElementById('loginBtn');
-    const toggle = document.getElementById('togglePassword');
-    const pw = document.getElementById('password');
-    let loading = false;
-
-    toggle.addEventListener('click', function() {
-        const type = pw.getAttribute('type') === 'password' ? 'text' : 'password';
-        pw.setAttribute('type', type);
-        this.innerHTML = type === 'password' ? '&#128065;' : '&#128064;';
-    });
-
-    form.addEventListener('submit', function() {
-        if (loading) return;
-        loading = true;
-        btn.classList.add('loading');
-        btn.disabled = true;
-    });
-})();
-</script>
 
 <?php require_once __DIR__ . '/../views/partials/footer.php'; ?>
