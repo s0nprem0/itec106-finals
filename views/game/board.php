@@ -1,11 +1,11 @@
 <?php
-$asset = $_SESSION['current_asset'];
-$next = $_SESSION['next_asset'];
-$balance = $_SESSION['balance'];
-$start_money = $_SESSION['start_money'];
-$round = $_SESSION['round'];
+$asset = $_SESSION['current_asset'] ?? [];
+$next = $_SESSION['next_asset'] ?? [];
+$balance = $_SESSION['balance'] ?? 0;
+$start_money = $_SESSION['start_money'] ?? 0;
+$round = $_SESSION['round'] ?? 1;
 $diff = $_SESSION['difficulty'] ?? 'medium';
-$diffConfig = DIFFICULTIES[$diff];
+$diffConfig = DIFFICULTIES[$diff] ?? DIFFICULTIES['medium'];
 $diffLabel = $diffConfig['label'];
 $diffDesc = $diffConfig['desc'];
 $payout = $diffConfig['payout'];
@@ -37,6 +37,9 @@ $diffClass = match($diff) {
         <span class="game-hud-value <?= $profit >= 0 ? 'game-profit-positive' : 'game-profit-negative' ?>">
             <?= $profit >= 0 ? '+' : '' ?>$<?= number_format(abs($profit), 0) ?>
         </span>
+    </div>
+    <div>
+        <a href="<?= BASE_URL ?>/game.php?restart=true&difficulty=<?= urlencode($diff) ?>" class="btn btn-sm btn-secondary">Restart</a>
     </div>
 </div>
 

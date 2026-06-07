@@ -12,7 +12,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Spec Showdown</title>
+    <title>Hardware Trader</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/style.css">
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -36,7 +36,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
 
 <header class="site-header">
     <div class="site-header-inner">
-        <a href="<?= BASE_URL ?>/<?= isset($_SESSION['acct_id']) ? 'game.php' : 'index.php' ?>" class="site-logo">Tech Spec Showdown</a>
+        <a href="<?= BASE_URL ?>/<?= isset($_SESSION['acct_id']) ? 'game.php' : 'index.php' ?>" class="site-logo">Hardware Trader</a>
         <nav class="site-nav">
             <?php if (isset($_SESSION['acct_id'])): ?>
                 <a href="<?= BASE_URL ?>/game.php" class="nav-link <?= $current_page === 'game' ? 'nav-link-active' : '' ?>">Play</a>

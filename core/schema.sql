@@ -119,4 +119,15 @@ INSERT INTO assets (item_name, price, category, image_url) VALUES
 ('Wooting 60HE Keyboard', 175.00, 'Peripherals', NULL),
 ('Herman Miller Aeron Chair', 1320.00, 'Furniture', NULL),
 ('Sony PlayStation 5', 499.00, 'Console', NULL),
-('Ubiquiti Dream Machine Pro', 379.00, 'Networking', NULL);
+('Ubiquiti Dream Machine Pro', 379.00, 'Networking', NULL),
+
+-- New additions for more volatility and variety
+('NVIDIA RTX 5090', 2499.99, 'GPU', NULL),
+('AMD Radeon RX 8900 XTX', 1199.99, 'GPU', NULL),
+('Intel Core i9-15900K', 589.00, 'CPU', NULL),
+('G.Skill Trident Z5 64GB DDR5', 289.99, 'RAM', NULL),
+('Crucial T705 4TB SSD', 449.99, 'Storage', NULL),
+('Samsung Odyssey OLED G9', 1299.99, 'Monitor', NULL),
+('Razer BlackWidow V4', 189.99, 'Peripherals', NULL),
+('DJI Avata 2 FPV Drone', 999.00, 'Drone', NULL),
+('Framework Laptop 16', 1899.00, 'Laptop', NULL);

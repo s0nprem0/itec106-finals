@@ -2554,3 +2554,20 @@ kbd {
         max-height: calc(100vh - 280px);
     }
 }
+
+.volatility-list {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.volatility-list li {
+    margin-bottom: 8px;
+}
+
+.game-instructions {
+    background: rgba(0,0,0,0.03);
+    padding: 18px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: left;
+}
