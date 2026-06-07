@@ -284,7 +284,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                                     <img class="admin-img-thumb" src="<?= htmlspecialchars($asset['image_url']) ?>" alt="">
                                 <?php else: ?>
                                     <div class="admin-img-thumb admin-img-placeholder-sm">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6e738d" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                                     </div>
                                 <?php endif; ?>
                             </td>
@@ -311,7 +311,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($assets)): ?>
-                        <tr><td class="admin-td" colspan="6" style="text-align:center;color:var(--macchiato-subtext);">
+                        <tr><td class="admin-td" colspan="6" style="text-align:center;color:var(--flat-subtext);">
                             <?= $search ? 'No assets match your search.' : 'No assets in the database.' ?>
                         </td></tr>
                     <?php endif; ?>
@@ -385,7 +385,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($scores)): ?>
-                        <tr><td class="admin-td" colspan="5" style="text-align:center;color:var(--macchiato-subtext);">No game data recorded yet.</td></tr>
+                        <tr><td class="admin-td" colspan="5" style="text-align:center;color:var(--flat-subtext);">No game data recorded yet.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
