@@ -12,6 +12,7 @@ function requireLogin() {
         if ($pdo && Auth::tryRememberLogin($pdo)) {
             return;
         }
+        session_write_close();
         header("Location: /itec106/index.php");
         exit;
     }

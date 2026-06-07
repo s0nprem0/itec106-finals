@@ -1,9 +1,5 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 require_once __DIR__ . '/../core/database.php';
 require_once __DIR__ . '/../core/auth.php';
 
@@ -192,7 +188,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         <td class="admin-td">
                             <div class="admin-actions">
                                 <a href="/itec106/admin.php?edit=<?= $asset['id'] ?>" class="btn btn-green admin-btn">Edit</a>
-                                <form method="POST" action="/itec106/admin.php" onsubmit="return confirm('Delete <?= htmlspecialchars(addslashes($asset['item_name'])) ?>?')">
+                                <form method="POST" action="/itec106/admin.php" onsubmit="return confirm('Delete <?= addslashes($asset['item_name']) ?>?')">
                                     <input type="hidden" name="action" value="delete_asset">
                                     <input type="hidden" name="asset_id" value="<?= $asset['id'] ?>">
                                     <button type="submit" class="btn btn-red admin-btn">Delete</button>

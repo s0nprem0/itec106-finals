@@ -10,6 +10,7 @@ require_once __DIR__ . '/../core/auth.php';
 Auth::tryRememberLogin($pdo);
 
 if (isset($_SESSION['acct_id'])) {
+    session_write_close();
     header("Location: /itec106/game.php");
     exit;
 }
@@ -25,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = Auth::loginUser($pdo, $username, $password, $remember);
 
         if ($result === true) {
+            session_write_close();
             header("Location: /itec106/game.php");
             exit;
         } else {

@@ -1,9 +1,5 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 require_once __DIR__ . '/../core/database.php';
 require_once __DIR__ . '/../core/auth.php';
 
@@ -15,7 +11,7 @@ try {
             a.username, 
             MAX(s.streak) as highest_streak, 
             MAX(s.played_at) as achieved_at,
-            s.difficulty
+            MAX(s.difficulty) AS difficulty
         FROM scores s
         JOIN accounts a ON s.acct_id = a.acct_id
         GROUP BY a.acct_id, a.username

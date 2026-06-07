@@ -3,8 +3,6 @@
 require_once __DIR__ . '/database.php';
 require_once __DIR__ . '/auth.php';
 
-requireLogin();
-
 const DIFFICULTIES = [
     'easy'   => ['volatility' => 10, 'label' => 'Easy',    'desc' => '±10%'],
     'medium' => ['volatility' => 20, 'label' => 'Medium',  'desc' => '±20%'],
@@ -71,12 +69,5 @@ function processGuess($pdo, $guess) {
         $_SESSION['current_asset'] = $_SESSION['next_asset'];
         $_SESSION['next_asset'] = getRandomAsset($pdo, $_SESSION['current_asset']['id'], $config['volatility']);
         $_SESSION['round'] += 1;
-    }
-}
-
-function saveScore($pdo) {
-    if (!empty($_SESSION['game_over']) && isset($_SESSION['acct_id']) && isset($_SESSION['score'])) {
-        $stmt = $pdo->prepare("INSERT INTO scores (acct_id, streak, difficulty) VALUES (?, ?, ?)");
-        $stmt->execute([$_SESSION['acct_id'], $_SESSION['score'], $_SESSION['difficulty'] ?? 'medium']);
     }
 }

@@ -1,9 +1,5 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 require_once __DIR__ . '/../core/database.php';
 require_once __DIR__ . '/../core/auth.php';
 require_once __DIR__ . '/../core/game_engine.php';
@@ -11,16 +7,19 @@ require_once __DIR__ . '/../core/game_engine.php';
 requireLogin();
 
 if (isset($_GET['restart'])) {
-    $diff = $_GET['difficulty'] ?? $_SESSION['difficulty'] ?? 'medium';
-    initGame($pdo, $diff);
+    $diff = $_GET['difficulty'] ?? null;
+    if ($diff && isset(DIFFICULTIES[$diff])) {
+        initGame($pdo, $diff);
+    } else {
+        unset($_SESSION['current_asset'], $_SESSION['next_asset'], $_SESSION['score'], $_SESSION['lives'], $_SESSION['round'], $_SESSION['game_over']);
+    }
     session_write_close();
     header("Location: /itec106/game.php");
     exit;
 }
 
-if (empty($_SESSION['current_asset'])) {
-    $diff = $_POST['difficulty'] ?? 'medium';
-    initGame($pdo, $diff);
+if (empty($_SESSION['current_asset']) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['difficulty'])) {
+    initGame($pdo, $_POST['difficulty']);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guess'])) {
