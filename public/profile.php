@@ -138,7 +138,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         };
                         ?>
                         <tr>
-                            <td class="admin-td lb-streak admin-td-streak"><?= (int)$s['streak'] ?></td>
+                            <td class="admin-td lb-streak"><?= (int)$s['streak'] ?></td>
                             <td class="admin-td"><span class="lb-diff-badge <?= $dc ?>"><?= htmlspecialchars(ucfirst($s['difficulty'] ?? 'Medium')) ?></span></td>
                             <td class="admin-td profile-td-right"><?= date('M j, Y g:i A', strtotime($s['played_at'])) ?></td>
                         </tr>

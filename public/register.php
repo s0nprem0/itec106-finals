@@ -67,7 +67,13 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <input class="auth-input" type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
                     <input class="auth-input" type="date" name="birthdate" required value="<?= htmlspecialchars($_POST['birthdate'] ?? '') ?>">
                 </div>
-                <input class="auth-input" type="password" name="password" placeholder="Password" minlength="6" required title="At least 6 characters">
+                <input class="auth-input" type="password" name="password" id="reg_password" placeholder="Password" minlength="6" required title="At least 6 characters">
+                <div id="reg-password-strength" class="password-strength" style="margin-bottom:0.5rem">
+                    <div class="password-strength-bar" style="max-width:100%">
+                        <div class="password-strength-fill" id="reg-strength-fill"></div>
+                    </div>
+                    <span class="password-strength-text" id="reg-strength-text"></span>
+                </div>
                 <input class="auth-input" type="password" name="confirm_password" placeholder="Confirm Password" minlength="6" required title="Passwords must match">
                 <button type="submit" class="btn btn-blue">Register</button>
             </form>
@@ -79,5 +85,42 @@ require_once __DIR__ . '/../views/partials/header.php';
         </p>
     </div>
 </div>
+
+<script>
+document.getElementById('reg_password').addEventListener('input', function() {
+    var pwd = this.value;
+    var fill = document.getElementById('reg-strength-fill');
+    var text = document.getElementById('reg-strength-text');
+    var score = 0;
+
+    if (pwd.length >= 6) score += 1;
+    if (pwd.length >= 8) score += 1;
+    if (pwd.length >= 10) score += 1;
+    if (/[a-z]/.test(pwd)) score += 1;
+    if (/[A-Z]/.test(pwd)) score += 1;
+    if (/[0-9]/.test(pwd)) score += 1;
+    if (/[^a-zA-Z0-9]/.test(pwd)) score += 1;
+
+    if (pwd.length === 0) {
+        fill.style.width = '0';
+        text.textContent = '';
+    } else if (score < 3) {
+        fill.style.width = '33%';
+        fill.style.backgroundColor = '#e74c3c';
+        text.textContent = 'Weak';
+        text.style.color = '#e74c3c';
+    } else if (score < 5) {
+        fill.style.width = '66%';
+        fill.style.backgroundColor = '#f39c12';
+        text.textContent = 'Medium';
+        text.style.color = '#f39c12';
+    } else {
+        fill.style.width = '100%';
+        fill.style.backgroundColor = '#27ae60';
+        text.textContent = 'Strong';
+        text.style.color = '#27ae60';
+    }
+});
+</script>
 
 <?php require_once __DIR__ . '/../views/partials/footer.php'; ?>

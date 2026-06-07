@@ -144,10 +144,20 @@ class Auth {
     }
 
     public static function registerUser($pdo, $firstName, $surname, $email, $username, $birthdate, $password) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return ['success' => false, 'message' => "Invalid email format."];
+        }
+
         $stmt = $pdo->prepare("SELECT acct_id FROM accounts WHERE username = ?");
         $stmt->execute([$username]);
         if ($stmt->fetch()) {
             return ['success' => false, 'message' => "Username already taken."];
+        }
+
+        $stmt = $pdo->prepare("SELECT acct_id FROM accounts WHERE email_addr = ?");
+        $stmt->execute([$email]);
+        if ($stmt->fetch()) {
+            return ['success' => false, 'message' => "Email address already in use."];
         }
 
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
