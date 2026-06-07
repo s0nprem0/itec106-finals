@@ -4,6 +4,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+$current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,19 +19,31 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <header class="site-header">
     <div class="site-header-inner">
-        <h1 class="site-logo">Tech Spec Showdown</h1>
+        <a href="<?= BASE_URL ?>/<?= isset($_SESSION['acct_id']) ? 'game.php' : 'index.php' ?>" class="site-logo">Tech Spec Showdown</a>
         <nav class="site-nav">
             <?php if (isset($_SESSION['acct_id'])): ?>
-                <a href="<?= BASE_URL ?>/game.php" class="nav-link">Play</a>
-                <a href="<?= BASE_URL ?>/leaderboard.php" class="nav-link">Leaderboard</a>
-                <a href="<?= BASE_URL ?>/profile.php" class="nav-link">Profile</a>
-                <a href="<?= BASE_URL ?>/settings.php" class="nav-link">Settings</a>
+                <a href="<?= BASE_URL ?>/game.php" class="nav-link <?= $current_page === 'game' ? 'nav-link-active' : '' ?>">Play</a>
+                <a href="<?= BASE_URL ?>/leaderboard.php" class="nav-link <?= $current_page === 'leaderboard' ? 'nav-link-active' : '' ?>">Leaderboard</a>
+
                 <?php if (!empty($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'moderator'])): ?>
-                    <a href="<?= BASE_URL ?>/admin.php" class="nav-link nav-link-admin">Admin</a>
+                    <a href="<?= BASE_URL ?>/admin.php" class="nav-link nav-link-admin <?= $current_page === 'admin' ? 'nav-link-active' : '' ?>">Admin</a>
                 <?php endif; ?>
-                <a href="<?= BASE_URL ?>/logout.php" class="nav-link nav-link-logout">Logout</a>
+
+                <span class="nav-divider"></span>
+
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle <?= in_array($current_page, ['profile', 'settings']) ? 'nav-link-active' : '' ?>">
+                        Account <span class="nav-dropdown-arrow">&#9662;</span>
+                    </a>
+                    <div class="nav-dropdown-menu">
+                        <a href="<?= BASE_URL ?>/profile.php" class="nav-dropdown-item <?= $current_page === 'profile' ? 'nav-dropdown-item-active' : '' ?>">Profile</a>
+                        <a href="<?= BASE_URL ?>/settings.php" class="nav-dropdown-item <?= $current_page === 'settings' ? 'nav-dropdown-item-active' : '' ?>">Settings</a>
+                        <div class="nav-dropdown-divider"></div>
+                        <a href="<?= BASE_URL ?>/logout.php" class="nav-dropdown-item nav-dropdown-item-logout">Logout</a>
+                    </div>
+                </div>
             <?php else: ?>
-                <a href="<?= BASE_URL ?>/index.php" class="nav-link nav-link-login">Login</a>
+                <a href="<?= BASE_URL ?>/index.php" class="nav-link nav-link-login <?= $current_page === 'index' ? 'nav-link-active' : '' ?>">Login</a>
             <?php endif; ?>
         </nav>
     </div>
