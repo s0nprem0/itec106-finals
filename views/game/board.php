@@ -12,6 +12,9 @@ $payout = $diffConfig['payout'];
 $progress_pct = min(100, round(($balance / WIN_TARGET) * 100));
 $profit = round($balance - $start_money, 2);
 
+// FIX 1: Calculate the actual maximum bet allowed by the backend engine (25%)
+$max_bet = max(1, round($balance * 0.25, 2));
+
 $diffClass = match($diff) {
     'easy'   => 'diff-easy',
     'hard'   => 'diff-hard',
@@ -35,7 +38,7 @@ $diffClass = match($diff) {
     <div class="game-hud-item">
         <span class="game-hud-label">P/L</span>
         <span class="game-hud-value <?= $profit >= 0 ? 'game-profit-positive' : 'game-profit-negative' ?>">
-            <?= $profit >= 0 ? '+' : '' ?>$<?= number_format(abs($profit), 0) ?>
+            <?= $profit >= 0 ? '+' : '-' ?>$<?= number_format(abs($profit), 0) ?>
         </span>
     </div>
     <div>
@@ -97,41 +100,42 @@ $diffClass = match($diff) {
     <?php endif; ?>
 
     <div class="game-bet-area">
-        <label class="game-bet-label">Your Bet</label>
+        <label class="game-bet-label">Your Bet (Max 25%)</label>
         <div class="game-bet-row">
             <span class="game-bet-dollar">$</span>
-            <input class="game-bet-input" type="number" id="bet-amount" name="bet" step="0.01" min="1" max="<?= $balance ?>" value="<?= min(500, $balance) ?>" required>
+            <input class="game-bet-input" type="number" id="bet-amount" name="bet" step="0.01" min="1" max="<?= $max_bet ?>" value="<?= min(500, $max_bet) ?>" required>
         </div>
         <div class="game-bet-presets">
             <button type="button" class="btn btn-sm game-bet-preset" data-amount="100">$100</button>
             <button type="button" class="btn btn-sm game-bet-preset" data-amount="500">$500</button>
             <button type="button" class="btn btn-sm game-bet-preset" data-amount="1000">$1k</button>
-            <button type="button" class="btn btn-sm game-bet-preset" data-amount="5000">$5k</button>
-            <button type="button" class="btn btn-sm game-bet-preset game-bet-allin" data-amount="<?= $balance ?>">All In</button>
+            <button type="button" class="btn btn-sm game-bet-preset game-bet-allin" data-amount="<?= $max_bet ?>">Max (25%)</button>
         </div>
     </div>
 
     <div class="game-actions">
         <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-higher" class="game-action-form">
             <input type="hidden" name="guess" value="higher">
-            <input type="hidden" name="bet" id="bet-higher" value="<?= min(500, $balance) ?>">
+            <input type="hidden" name="bet" id="bet-higher" value="<?= min(500, $max_bet) ?>">
             <button type="submit" class="btn btn-green game-btn">↑ Higher</button>
         </form>
-        <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-cashout" class="game-action-form">
+        
+        <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-cashout" class="game-action-form" onsubmit="return confirm('Are you sure you want to cash out? This will end your game instantly and record your current profit.');">
             <input type="hidden" name="cashout" value="1">
             <button type="submit" class="btn btn-purple game-btn">Cash Out</button>
         </form>
+        
         <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-lower" class="game-action-form">
             <input type="hidden" name="guess" value="lower">
-            <input type="hidden" name="bet" id="bet-lower" value="<?= min(500, $balance) ?>">
+            <input type="hidden" name="bet" id="bet-lower" value="<?= min(500, $max_bet) ?>">
             <button type="submit" class="btn btn-red game-btn">↓ Lower</button>
         </form>
     </div>
 
     <div class="game-bet-summary">
-        Bet <strong>$<span id="display-bet"><?= number_format(min(500, $balance), 0) ?></span></strong>
+        Bet <strong>$<span id="display-bet"><?= number_format(min(500, $max_bet), 0) ?></span></strong>
         &times; <?= $payout ?>x payout
-        &rarr; win <strong class="game-profit-positive">$<span id="display-win"><?= number_format(min(500, $balance) * $payout, 0) ?></span></strong>
+        &rarr; win <strong class="game-profit-positive">$<span id="display-win"><?= number_format(min(500, $max_bet) * $payout, 0) ?></span></strong>
     </div>
 </div>
 
@@ -146,7 +150,8 @@ $diffClass = match($diff) {
 
     function updateBet(val) {
         if (val <= 0) val = 1;
-        if (val > <?= $balance ?>) val = <?= $balance ?>;
+        // FIX 1: JS limit now respects the $max_bet calculation
+        if (val > <?= $max_bet ?>) val = <?= $max_bet ?>;
         input.value = val;
         btnHigher.value = val;
         btnLower.value = val;
@@ -155,6 +160,14 @@ $diffClass = match($diff) {
     }
 
     input.addEventListener('input', function() { updateBet(parseFloat(this.value) || 0); });
+
+    // FIX 2: Prevent the Enter key from submitting a blank screen and guide user
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            alert("Bet logged. Please click 'Higher' or 'Lower' (or use H/L keys) to finalize your move.");
+        }
+    });
 
     document.querySelectorAll('.game-bet-preset').forEach(function(p) {
         p.addEventListener('click', function() { updateBet(parseFloat(this.dataset.amount) || 0); });
