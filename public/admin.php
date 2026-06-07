@@ -10,27 +10,11 @@ unset($_SESSION['flash']);
 $error_msg = '';
 
 $tab = $_GET['tab'] ?? 'assets';
-$edit_id = isset($_GET['edit']) ? (int)$_GET['edit'] : null;
-$delete_id = isset($_GET['delete']) ? (int)$_GET['delete'] : null;
 $search = trim($_GET['search'] ?? '');
 $dir = strtolower($_GET['dir'] ?? 'asc') === 'desc' ? 'desc' : 'asc';
 $dir_sql = $dir === 'desc' ? 'DESC' : 'ASC';
 
 $diff_filter = trim($_GET['difficulty'] ?? '');
-
-$edit_asset = null;
-if ($edit_id) {
-    $stmt = $pdo->prepare("SELECT * FROM assets WHERE id = ?");
-    $stmt->execute([$edit_id]);
-    $edit_asset = $stmt->fetch();
-}
-
-$delete_asset = null;
-if ($delete_id && hasPermission($pdo, 'assets.delete')) {
-    $stmt = $pdo->prepare("SELECT id, item_name FROM assets WHERE id = ?");
-    $stmt->execute([$delete_id]);
-    $delete_asset = $stmt->fetch();
-}
 
 $delete_score = null;
 if (isset($_GET['delete_score']) && hasPermission($pdo, 'scores.delete')) {
@@ -65,52 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             $error_msg = "Invalid price format detected.";
-        }
-    }
-
-    if ($action === 'save_asset') {
-        $name = trim($_POST['item_name'] ?? '');
-        $category = trim($_POST['category'] ?? '');
-        $price = filter_var($_POST['price'] ?? '', FILTER_VALIDATE_FLOAT);
-        $image_url = trim($_POST['image_url'] ?? '');
-        $asset_id = (int)($_POST['asset_id'] ?? 0);
-
-        if (!$name || !$category || $price === false || $price <= 0) {
-            $error_msg = "Name, category, and a valid price are required.";
-        } else {
-            try {
-                if ($asset_id) {
-                    $stmt = $pdo->prepare("UPDATE assets SET item_name = ?, category = ?, price = ?, image_url = ? WHERE id = ?");
-                    $stmt->execute([$name, $category, $price, $image_url ?: null, $asset_id]);
-                    $_SESSION['flash'] = ['type' => 'success', 'text' => "Asset \"$name\" updated."];
-                } else {
-                    $stmt = $pdo->prepare("INSERT INTO assets (item_name, category, price, image_url) VALUES (?, ?, ?, ?)");
-                    $stmt->execute([$name, $category, $price, $image_url ?: null]);
-                    $_SESSION['flash'] = ['type' => 'success', 'text' => "New asset \"$name\" added."];
-                }
-                session_write_close();
-                header("Location: " . BASE_URL . "/admin.php?tab=" . urlencode($tab));
-                exit;
-            } catch (PDOException $e) {
-                $error_msg = "Database Error: Unable to save asset.";
-            }
-        }
-    }
-
-    if ($action === 'delete_asset' && hasPermission($pdo, 'assets.delete')) {
-        $asset_id = (int)($_POST['asset_id'] ?? 0);
-        try {
-            $stmt = $pdo->prepare("SELECT item_name FROM assets WHERE id = ?");
-            $stmt->execute([$asset_id]);
-            $name = $stmt->fetchColumn();
-            $stmt = $pdo->prepare("DELETE FROM assets WHERE id = ?");
-            $stmt->execute([$asset_id]);
-            $_SESSION['flash'] = ['type' => 'success', 'text' => "Asset \"" . ($name ?: "#$asset_id") . "\" deleted."];
-            session_write_close();
-            header("Location: " . BASE_URL . "/admin.php?tab=" . urlencode($tab));
-            exit;
-        } catch (PDOException $e) {
-            $error_msg = "Database Error: Unable to delete asset.";
         }
     }
 
@@ -161,6 +99,7 @@ try {
     $scores = [];
 
     if ($tab === 'assets') {
+        $has_create_perm = hasPermission($pdo, 'assets.create');
         $sort = $_GET['sort'] ?? 'category';
         $allowed_sorts = ['category', 'item_name', 'price', 'id'];
         if (!in_array($sort, $allowed_sorts)) {
@@ -273,70 +212,13 @@ require_once __DIR__ . '/../views/partials/header.php';
 
 <?php if ($tab === 'assets'): ?>
 
-        <div class="card admin-form-card">
-            <h2 class="admin-form-title"><?= $edit_asset ? 'Edit Asset' : 'Add New Asset' ?></h2>
-            <form class="admin-form" method="POST" action="<?= BASE_URL ?>/admin.php?tab=assets">
-                <input type="hidden" name="action" value="save_asset">
-                <?php if ($edit_asset): ?>
-                    <input type="hidden" name="asset_id" value="<?= $edit_asset['id'] ?>">
-                <?php endif; ?>
-
-                <div class="admin-form-row">
-                    <div class="admin-form-group">
-                        <label class="admin-form-label" for="item_name">Item Name</label>
-                        <input class="admin-form-input" type="text" id="item_name" name="item_name" required value="<?= htmlspecialchars($edit_asset['item_name'] ?? '') ?>">
-                    </div>
-                    <div class="admin-form-group">
-                        <label class="admin-form-label" for="category">Category</label>
-                        <input class="admin-form-input" list="category-list" id="category" name="category" required value="<?= htmlspecialchars($edit_asset['category'] ?? '') ?>">
-                        <datalist id="category-list">
-                            <?php foreach ($categories as $cat): ?>
-                                <option value="<?= htmlspecialchars($cat) ?>">
-                            <?php endforeach; ?>
-                        </datalist>
-                    </div>
-                </div>
-
-                <div class="admin-form-row">
-                    <div class="admin-form-group">
-                        <label class="admin-form-label" for="price">Price ($)</label>
-                        <input class="admin-form-input" type="number" step="0.01" id="price" name="price" required value="<?= htmlspecialchars($edit_asset['price'] ?? '') ?>">
-                    </div>
-                    <div class="admin-form-group">
-                        <label class="admin-form-label" for="image_url">Image URL (optional)</label>
-                        <input class="admin-form-input" type="url" id="image_url" name="image_url" placeholder="https://..." value="<?= htmlspecialchars($edit_asset['image_url'] ?? '') ?>">
-                    </div>
-                </div>
-
-                <div class="admin-form-actions">
-                    <button type="submit" class="btn btn-blue"><?= $edit_asset ? 'Update Asset' : 'Add Asset' ?></button>
-                    <?php if ($edit_asset): ?>
-                        <a href="<?= BASE_URL ?>/admin.php?tab=assets" class="btn btn-red admin-btn">Cancel</a>
-                    <?php endif; ?>
-                </div>
-            </form>
-        </div>
-
-        <?php if ($delete_asset && hasPermission($pdo, 'assets.delete')): ?>
-            <div class="card admin-delete-card">
-                <h2 class="admin-form-title">Delete Asset</h2>
-                <p class="admin-delete-text">
-                    Are you sure you want to permanently remove <strong class="admin-delete-name"><?= htmlspecialchars($delete_asset['item_name']) ?></strong> from the database?
-                </p>
-                <form method="POST" action="<?= BASE_URL ?>/admin.php?tab=assets">
-                    <input type="hidden" name="action" value="delete_asset">
-                    <input type="hidden" name="asset_id" value="<?= $delete_asset['id'] ?>">
-                    <div class="admin-form-actions">
-                        <button type="submit" class="btn btn-red">Confirm Delete</button>
-                        <a href="<?= BASE_URL ?>/admin.php?tab=assets" class="btn btn-blue admin-btn">Cancel</a>
-                    </div>
-                </form>
-            </div>
-        <?php endif; ?>
-
         <div class="card">
             <div class="admin-assets-header">
                 <h2 class="admin-assets-title">Hardware Asset Database</h2>
+                <div style="display:flex;gap:0.5rem;align-items:center;">
+                <?php if ($has_create_perm): ?>
+                    <a href="<?= BASE_URL ?>/admin_asset.php?action=add" class="btn btn-green admin-btn">+ Add Asset</a>
+                <?php endif; ?>
                 <form class="admin-search-form" method="GET" action="<?= BASE_URL ?>/admin.php">
                     <input type="hidden" name="tab" value="assets">
                     <input class="admin-search-input" type="text" name="search" placeholder="Search assets..." value="<?= htmlspecialchars($search) ?>">
@@ -398,9 +280,9 @@ require_once __DIR__ . '/../views/partials/header.php';
                             </td>
                             <td class="admin-td">
                                 <div class="admin-actions">
-                                    <a href="<?= BASE_URL ?>/admin.php?tab=assets&edit=<?= $asset['id'] ?>" class="btn btn-green admin-btn">Edit</a>
+                                    <a href="<?= BASE_URL ?>/admin_asset.php?action=edit&id=<?= $asset['id'] ?>" class="btn btn-green admin-btn">Edit</a>
                                     <?php if (hasPermission($pdo, 'assets.delete')): ?>
-                                    <a href="<?= BASE_URL ?>/admin.php?tab=assets&delete=<?= $asset['id'] ?>" class="btn btn-red admin-btn">Delete</a>
+                                    <a href="<?= BASE_URL ?>/admin_asset.php?action=delete&id=<?= $asset['id'] ?>" class="btn btn-red admin-btn">Delete</a>
                                     <?php endif; ?>
                                 </div>
                             </td>
@@ -468,7 +350,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <?php foreach ($players as $p): ?>
                         <tr>
                             <td class="admin-td admin-td-id">#<?= $p['acct_id'] ?></td>
-                            <td class="admin-td admin-item-name"><?= htmlspecialchars($p['username']) ?></td>
+                            <td class="admin-td admin-item-name"><a href="<?= BASE_URL ?>/profile.php?id=<?= $p['acct_id'] ?>" class="profile-view-link"><?= htmlspecialchars($p['username']) ?></a></td>
                             <td class="admin-td"><?= htmlspecialchars($p['first_name']) ?></td>
                             <td class="admin-td"><?= htmlspecialchars($p['surname']) ?></td>
                             <td class="admin-td"><?= htmlspecialchars($p['email_addr']) ?></td>

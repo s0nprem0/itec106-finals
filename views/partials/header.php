@@ -22,6 +22,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <?php if (isset($_SESSION['acct_id'])): ?>
                 <a href="<?= BASE_URL ?>/game.php" class="nav-link">Play</a>
                 <a href="<?= BASE_URL ?>/leaderboard.php" class="nav-link">Leaderboard</a>
+                <a href="<?= BASE_URL ?>/profile.php" class="nav-link">Profile</a>
                 <?php if (!empty($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'moderator'])): ?>
                     <a href="<?= BASE_URL ?>/admin.php" class="nav-link nav-link-admin">Admin</a>
                 <?php endif; ?>

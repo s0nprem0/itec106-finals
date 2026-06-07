@@ -100,6 +100,9 @@ input[type="date"] {
    Site Header / Navigation
    ============================================ */
 .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     background-color: var(--flat-surface);
     padding: 0.85rem 1rem;
     border-bottom: 1px solid var(--flat-border);
@@ -789,8 +792,12 @@ input[type="date"] {
     transition: background-color 0.12s ease;
 }
 
-.lb-tr:hover {
+.lb-table tbody tr:nth-child(even) {
     background-color: #f8f9fb;
+}
+
+.lb-tr:hover {
+    background-color: #eff1f5;
 }
 
 .lb-td {
@@ -1035,6 +1042,11 @@ input[type="date"] {
     margin-bottom: 1rem;
 }
 
+.admin-th-sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
 .admin-th-sortable a {
     color: inherit;
     text-decoration: none;
@@ -1043,6 +1055,10 @@ input[type="date"] {
 
 .admin-th-sortable a:hover {
     color: var(--flat-text);
+}
+
+.admin-th-sortable:hover {
+    background-color: #f8f9fb;
 }
 
 .admin-th-sort-active a {
@@ -1072,6 +1088,14 @@ input[type="date"] {
     padding: 1rem;
     border-bottom: 1px solid var(--flat-border);
     vertical-align: middle;
+}
+
+.admin-table tbody tr:nth-child(even) {
+    background-color: #f8f9fb;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #eff1f5;
 }
 
 .admin-td-id {
@@ -1221,4 +1245,176 @@ input[type="date"] {
 
 .admin-delete-name {
     color: var(--flat-text);
+}
+
+/* ============================================
+   Profile Page
+   ============================================ */
+.profile-page {
+    max-width: 800px;
+    margin: 2rem auto 0;
+}
+
+.profile-card {
+    border-top: 3px solid var(--flat-blue);
+    margin-bottom: 2rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--flat-border);
+}
+
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: var(--flat-blue);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.profile-header-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    color: var(--flat-text);
+}
+
+.profile-role {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+.profile-header-actions {
+    flex-shrink: 0;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profile-detail {
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--flat-bg);
+}
+
+.profile-detail:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.profile-detail-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--flat-subtext);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    min-width: 140px;
+    flex-shrink: 0;
+}
+
+.profile-detail-value {
+    color: var(--flat-text);
+    font-size: 0.95rem;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profile-password-form {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--flat-border);
+}
+
+.profile-password-title {
+    color: var(--flat-text);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.profile-stats-card {
+    border-top: 3px solid var(--flat-green);
+}
+
+.profile-stats-title {
+    color: var(--flat-blue);
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.profile-stat {
+    flex: 1;
+    text-align: center;
+    border-top: 3px solid;
+}
+
+.profile-stat-blue {
+    border-top-color: var(--flat-blue);
+}
+
+.profile-stat-green {
+    border-top-color: var(--flat-green);
+}
+
+.profile-recent-title {
+    color: var(--flat-text);
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.profile-recent-table {
+    margin-top: 0.5rem;
+}
+
+.profile-recent-table th:last-child,
+.profile-recent-table td:last-child {
+    text-align: right;
+}
+
+.profile-no-data {
+    color: var(--flat-subtext);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--flat-bg);
+    border-radius: 8px;
+}
+
+.profile-view-link {
+    color: var(--flat-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.profile-view-link:hover {
+    text-decoration: underline;
 }
