@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/../views/partials/header.php';
 ?>
 
-<div class="auth-container" style="max-width: 500px;">
+<div class="auth-container auth-container-narrow">
     <div class="card auth-card">
         <h2 class="auth-title">Create Account</h2>
 
@@ -50,7 +50,7 @@ require_once __DIR__ . '/../views/partials/header.php';
 
         <?php if ($success): ?>
             <div class="auth-success"><?= htmlspecialchars($success) ?></div>
-            <a href="/itec106/index.php" class="btn btn-blue" style="display: block; text-align: center; margin-top: 1rem;">Go to Login</a>
+            <a href="/itec106/index.php" class="btn btn-blue btn-block">Go to Login</a>
         <?php else: ?>
 
             <form class="auth-form" method="POST" action="/itec106/register.php">
@@ -61,7 +61,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <input class="auth-input" type="email" name="email_addr" placeholder="Email Address" required value="<?= htmlspecialchars($_POST['email_addr'] ?? '') ?>">
                 <div class="auth-row">
                     <input class="auth-input" type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
-                    <input class="auth-input" type="date" name="birthdate" required value="<?= htmlspecialchars($_POST['birthdate'] ?? '') ?>" style="color-scheme: dark;">
+                    <input class="auth-input" type="date" name="birthdate" required value="<?= htmlspecialchars($_POST['birthdate'] ?? '') ?>">
                 </div>
                 <input class="auth-input" type="password" name="password" placeholder="Password" required>
                 <button type="submit" class="btn btn-blue">Register</button>

@@ -15,19 +15,19 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 <body>
 
-<header style="background-color: var(--macchiato-surface); padding: 1rem; border-bottom: 2px solid var(--macchiato-base);">
-    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-        <h1 style="color: var(--macchiato-blue); font-size: 1.5rem;">Tech Spec Showdown</h1>
-        <nav>
+<header class="site-header">
+    <div class="site-header-inner">
+        <h1 class="site-logo">Tech Spec Showdown</h1>
+        <nav class="site-nav">
             <?php if (isset($_SESSION['acct_id'])): ?>
-                <a href="/itec106/game.php" style="color: var(--macchiato-text); margin-right: 15px; text-decoration: none;">Play</a>
-                <a href="/itec106/leaderboard.php" style="color: var(--macchiato-text); margin-right: 15px; text-decoration: none;">Leaderboard</a>
+                <a href="/itec106/game.php" class="nav-link">Play</a>
+                <a href="/itec106/leaderboard.php" class="nav-link">Leaderboard</a>
                 <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                    <a href="/itec106/admin.php" style="color: var(--macchiato-green); margin-right: 15px; text-decoration: none;">Admin</a>
+                    <a href="/itec106/admin.php" class="nav-link nav-link-admin">Admin</a>
                 <?php endif; ?>
-                <a href="/itec106/logout.php" style="color: var(--macchiato-red); text-decoration: none;">Logout</a>
+                <a href="/itec106/logout.php" class="nav-link nav-link-logout">Logout</a>
             <?php else: ?>
-                <a href="/itec106/index.php" style="color: var(--macchiato-blue); text-decoration: none;">Login</a>
+                <a href="/itec106/index.php" class="nav-link nav-link-login">Login</a>
             <?php endif; ?>
         </nav>
     </div>
