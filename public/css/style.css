@@ -1,0 +1,72 @@
+/* public/css/style.css */
+
+/* Define the Catppuccin Macchiato Color Palette */
+:root {
+    --macchiato-base: #24273a;       /* Main App Background */
+    --macchiato-surface: #363a4f;    /* Cards, Containers, Form boxes */
+    --macchiato-text: #cad3f5;       /* Primary Text */
+    --macchiato-subtext: #a5adcb;    /* Secondary/Muted Text */
+    --macchiato-blue: #8aadf4;      /* Buttons, Links, Highlights */
+    --macchiato-green: #a6da95;     /* Success, Correct Guess, Higher */
+    --macchiato-red: #ed8796;       /* Danger, Wrong Guess, Lower, Health */
+}
+
+/* Reset and Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--macchiato-base);
+    color: var(--macchiato-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Reusable Utility Classes (Mimicking layout helpers) */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.card {
+    background-color: var(--macchiato-surface);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn-blue {
+    background-color: var(--macchiato-blue);
+    color: var(--macchiato-base);
+}
+
+.btn-green {
+    background-color: var(--macchiato-green);
+    color: var(--macchiato-base);
+}
+
+.btn-red {
+    background-color: var(--macchiato-red);
+    color: var(--macchiato-base);
+}
