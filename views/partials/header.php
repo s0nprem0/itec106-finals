@@ -32,9 +32,9 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
                 <span class="nav-divider"></span>
 
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-dropdown-toggle <?= in_array($current_page, ['profile', 'settings']) ? 'nav-link-active' : '' ?>">
+                    <span class="nav-link nav-dropdown-toggle <?= in_array($current_page, ['profile', 'settings']) ? 'nav-link-active' : '' ?>" tabindex="0" role="button" aria-haspopup="true">
                         Account <span class="nav-dropdown-arrow">&#9662;</span>
-                    </a>
+                    </span>
                     <div class="nav-dropdown-menu">
                         <a href="<?= BASE_URL ?>/profile.php" class="nav-dropdown-item <?= $current_page === 'profile' ? 'nav-dropdown-item-active' : '' ?>">Profile</a>
                         <a href="<?= BASE_URL ?>/settings.php" class="nav-dropdown-item <?= $current_page === 'settings' ? 'nav-dropdown-item-active' : '' ?>">Settings</a>

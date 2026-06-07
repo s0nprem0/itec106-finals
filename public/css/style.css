@@ -193,16 +193,25 @@ input[type="date"] {
 .nav-dropdown-toggle {
     cursor: pointer;
     user-select: none;
+    display: inline-block;
+    outline: none;
 }
 
 .nav-dropdown-arrow {
     font-size: 0.7rem;
     margin-left: 0.15rem;
+    display: inline-block;
+    transition: transform 0.15s ease;
+}
+
+.nav-dropdown:hover .nav-dropdown-arrow,
+.nav-dropdown:focus-within .nav-dropdown-arrow {
+    transform: rotate(180deg);
 }
 
 .nav-dropdown-menu {
     position: absolute;
-    top: calc(100% + 8px);
+    top: 100%;
     right: 0;
     min-width: 160px;
     background-color: var(--flat-surface);
@@ -214,7 +223,8 @@ input[type="date"] {
     z-index: 200;
 }
 
-.nav-dropdown:hover .nav-dropdown-menu {
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown:focus-within .nav-dropdown-menu {
     display: block;
 }
 
