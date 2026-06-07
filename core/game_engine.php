@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/database.php';
 
-const WIN_TARGET = 50000;
+const WIN_TARGET = 30000; // lowred to 30000 for presentation purposes, can be set back to 50000 or higher for more challenge
 const MAX_ROUNDS = 20;
 
 // Improved DIFFICULTIES with better balance
