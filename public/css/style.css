@@ -1347,16 +1347,17 @@ kbd {
 }
 
 .admin-th {
-    padding: 0.6rem 0.75rem;
+    padding: 0.5rem 0.75rem;
     color: var(--flat-subtext);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     border-bottom: 2px solid var(--flat-border);
+    vertical-align: middle;
 }
 
 .admin-th-sm {
-    width: 52px;
+    width: 60px;
 }
 
 .admin-td {
@@ -1849,4 +1850,18 @@ kbd {
     gap: 0.75rem;
     align-items: center;
     padding-top: 0.25rem;
+}
+
+.settings-card-danger {
+    border-top-color: var(--flat-red);
+}
+
+.settings-card-title-danger {
+    color: var(--flat-red);
+}
+
+.settings-delete-warning {
+    color: var(--flat-subtext);
+    font-size: 0.85rem;
+    line-height: 1.4;
 }

@@ -11,6 +11,7 @@ $flash = $_SESSION['flash'] ?? null;
 unset($_SESSION['flash']);
 $validation_errors = [];
 $password_errors = [];
+$delete_errors = [];
 
 $stmt = $pdo->prepare("SELECT username, first_name, surname, email_addr, birthdate FROM accounts WHERE acct_id = ?");
 $stmt->execute([$acct_id]);
@@ -22,7 +23,36 @@ if (!$user) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['change_password'])) {
+    if (isset($_POST['delete_account'])) {
+        $del_password = $_POST['del_password'] ?? '';
+
+        $stmt = $pdo->prepare("SELECT password, role FROM accounts WHERE acct_id = ?");
+        $stmt->execute([$acct_id]);
+        $acct = $stmt->fetch();
+
+        if (!$acct) {
+            $delete_errors[] = 'Account not found.';
+        } elseif ($acct['role'] === 'admin') {
+            $delete_errors[] = 'Admin accounts cannot be deleted through this interface.';
+        } elseif (!$del_password) {
+            $delete_errors[] = 'Current password is required to delete your account.';
+        } elseif (!password_verify($del_password, $acct['password'])) {
+            $delete_errors[] = 'Current password is incorrect.';
+        } else {
+            try {
+                $stmt = $pdo->prepare("DELETE FROM accounts WHERE acct_id = ?");
+                $stmt->execute([$acct_id]);
+                session_destroy();
+                session_start();
+                $_SESSION['flash'] = ['type' => 'success', 'text' => 'Your account has been deleted.'];
+                session_write_close();
+                header("Location: " . BASE_URL . "/login.php");
+                exit;
+            } catch (PDOException $e) {
+                $delete_errors[] = 'Database error: Unable to delete account.';
+            }
+        }
+    } elseif (isset($_POST['change_password'])) {
         $current = $_POST['current_password'] ?? '';
         $new = $_POST['new_password'] ?? '';
         $confirm = $_POST['confirm_password'] ?? '';
@@ -196,6 +226,36 @@ require_once __DIR__ . '/../views/partials/header.php';
         </form>
     </div>
 
-</div>
+    <div class="card settings-card settings-card-danger">
+        <h2 class="settings-card-title settings-card-title-danger">Delete Account</h2>
+
+        <?php if (!empty($delete_errors)): ?>
+            <div class="admin-msg admin-msg-error">
+                &#33; <?= implode('<br>&#33; ', array_map('htmlspecialchars', $delete_errors)) ?>
+            </div>
+        <?php endif; ?>
+
+        <form class="settings-form" method="POST" action="<?= BASE_URL ?>/settings.php">
+            <p class="settings-delete-warning">
+                This will permanently delete your account and all associated data
+                (game history, session tokens, etc.). This action cannot be undone.
+            </p>
+
+            <div class="admin-form-row">
+                <div class="admin-form-group">
+                    <label class="admin-form-label" for="del_password">Enter Current Password to Confirm</label>
+                    <input class="admin-form-input" type="password" id="del_password" name="del_password" required
+                           placeholder="Current password">
+                </div>
+            </div>
+
+            <div class="settings-actions">
+                <input type="hidden" name="delete_account" value="1">
+                <button type="submit" class="btn btn-red">Delete My Account</button>
+            </div>
+        </form>
+    </div>
+
+</div><?php // close settings-page ?>
 
 <?php require_once __DIR__ . '/../views/partials/footer.php'; ?>
