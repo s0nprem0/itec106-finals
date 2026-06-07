@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../core/database.php';
 require_once __DIR__ . '/../core/auth.php';
 
-requireAdmin();
+requirePermission($pdo, 'admin.access');
 
 $success_msg = '';
 $error_msg = '';
@@ -25,14 +25,14 @@ if ($edit_id) {
 }
 
 $delete_asset = null;
-if ($delete_id) {
+if ($delete_id && hasPermission($pdo, 'assets.delete')) {
     $stmt = $pdo->prepare("SELECT id, item_name FROM assets WHERE id = ?");
     $stmt->execute([$delete_id]);
     $delete_asset = $stmt->fetch();
 }
 
 $delete_score = null;
-if (isset($_GET['delete_score'])) {
+if (isset($_GET['delete_score']) && hasPermission($pdo, 'scores.delete')) {
     $sid = (int)$_GET['delete_score'];
     if ($sid) {
         $stmt = $pdo->prepare("SELECT s.id, s.streak, a.username FROM scores s JOIN accounts a ON s.acct_id = a.acct_id WHERE s.id = ?");
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if ($action === 'delete_asset') {
+    if ($action === 'delete_asset' && hasPermission($pdo, 'assets.delete')) {
         $asset_id = (int)($_POST['asset_id'] ?? 0);
         try {
             $stmt = $pdo->prepare("DELETE FROM assets WHERE id = ?");
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if ($action === 'delete_score') {
+    if ($action === 'delete_score' && hasPermission($pdo, 'scores.delete')) {
         $score_id = (int)($_POST['score_id'] ?? 0);
         try {
             $stmt = $pdo->prepare("DELETE FROM scores WHERE id = ?");
@@ -279,7 +279,7 @@ require_once __DIR__ . '/../views/partials/header.php';
             </form>
         </div>
 
-        <?php if ($delete_asset): ?>
+        <?php if ($delete_asset && hasPermission($pdo, 'assets.delete')): ?>
             <div class="card admin-delete-card">
                 <h2 class="admin-form-title">Delete Asset</h2>
                 <p class="admin-delete-text">
@@ -361,7 +361,9 @@ require_once __DIR__ . '/../views/partials/header.php';
                             <td class="admin-td">
                                 <div class="admin-actions">
                                     <a href="/itec106/admin.php?tab=assets&edit=<?= $asset['id'] ?>" class="btn btn-green admin-btn">Edit</a>
+                                    <?php if (hasPermission($pdo, 'assets.delete')): ?>
                                     <a href="/itec106/admin.php?tab=assets&delete=<?= $asset['id'] ?>" class="btn btn-red admin-btn">Delete</a>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
@@ -449,7 +451,7 @@ require_once __DIR__ . '/../views/partials/header.php';
 
 <?php elseif ($tab === 'scores'): ?>
 
-        <?php if ($delete_score): ?>
+        <?php if ($delete_score && hasPermission($pdo, 'scores.delete')): ?>
             <div class="card admin-delete-card">
                 <h2 class="admin-form-title">Delete Score Record</h2>
                 <p class="admin-delete-text">
@@ -532,7 +534,9 @@ require_once __DIR__ . '/../views/partials/header.php';
                             </td>
                             <td class="admin-td"><?= date('M j, Y g:i A', strtotime($s['played_at'])) ?></td>
                             <td class="admin-td">
+                                <?php if (hasPermission($pdo, 'scores.delete')): ?>
                                 <a href="/itec106/admin.php?tab=scores&delete_score=<?= $s['id'] ?>" class="btn btn-red admin-btn">Delete</a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

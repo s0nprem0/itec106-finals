@@ -19,7 +19,7 @@ CREATE TABLE accounts (
     username VARCHAR(30) NOT NULL, -- unique username for login
     birthdate DATE NOT NULL, -- store as DATE for easier age calculations
     password VARCHAR(255) NOT NULL,  -- store hashed password
-    role ENUM('player', 'admin') NOT NULL DEFAULT 'player' -- role to differentiate between players and admins
+    role ENUM('player', 'moderator', 'admin') NOT NULL DEFAULT 'player' -- role to differentiate between players, moderators, and admins
 ) ENGINE=InnoDB;
 
 -- ======================================================
@@ -63,11 +63,43 @@ CREATE TABLE scores (
 
 
 -- ======================================================
+-- 5. Permissions Table (Granular Role-Based Access Control)
+-- ======================================================
+CREATE TABLE permissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    role ENUM('player', 'moderator', 'admin') NOT NULL,
+    permission VARCHAR(50) NOT NULL,
+    UNIQUE KEY (role, permission)
+) ENGINE=InnoDB;
+
+-- Seed permissions for each role
+INSERT INTO permissions (role, permission) VALUES
+-- Moderator permissions (view + edit, no delete)
+('moderator', 'admin.access'),
+('moderator', 'assets.view'),
+('moderator', 'assets.create'),
+('moderator', 'assets.edit'),
+('moderator', 'assets.edit_price'),
+('moderator', 'players.view'),
+('moderator', 'scores.view'),
+-- Admin permissions (full access including delete)
+('admin', 'admin.access'),
+('admin', 'assets.view'),
+('admin', 'assets.create'),
+('admin', 'assets.edit'),
+('admin', 'assets.edit_price'),
+('admin', 'assets.delete'),
+('admin', 'players.view'),
+('admin', 'scores.view'),
+('admin', 'scores.delete');
+
+-- ======================================================
 -- Seed Data (Optional: Insert Sample Data for Testing)
 -- ======================================================
 INSERT INTO accounts (first_name, surname, email_addr, username, birthdate, password, role) VALUES
 ('Admin', 'User', 'admin@example.com', 'admin', '1990-01-01', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
-('Jayson', 'Player', 'player1@example.com', 'player1', '2000-05-15', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'player');
+('Jayson', 'Player', 'player1@example.com', 'player1', '2000-05-15', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'player'),
+('Moderator', 'User', 'moderator@example.com', 'moderator', '1995-03-20', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'moderator');
 
 -- Seed 15 diverse hardware assets to test the game loop immediately
 INSERT INTO assets (item_name, price, category, image_url) VALUES

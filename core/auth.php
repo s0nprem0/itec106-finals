@@ -26,6 +26,24 @@ function requireAdmin() {
     }
 }
 
+function hasPermission($pdo, $permission) {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    $role = $_SESSION['role'] ?? 'player';
+    $stmt = $pdo->prepare("SELECT 1 FROM permissions WHERE role = ? AND permission = ?");
+    $stmt->execute([$role, $permission]);
+    return (bool)$stmt->fetchColumn();
+}
+
+function requirePermission($pdo, $permission) {
+    requireLogin();
+    if (!hasPermission($pdo, $permission)) {
+        http_response_code(403);
+        die("Access denied.");
+    }
+}
+
 class Auth {
     public static function loginUser($pdo, $username, $password, $remember = false) {
         $stmt = $pdo->prepare("SELECT acct_id, password, role FROM accounts WHERE username = ?");
