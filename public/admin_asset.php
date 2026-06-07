@@ -115,14 +115,14 @@ try {
 require_once __DIR__ . '/../views/partials/header.php';
 ?>
 
-<div class="admin-page">
+<div class="admin-page admin-asset-page">
 
     <div class="admin-header">
         <h1 class="admin-title">
             <?= $action === 'delete' ? 'Delete Asset' : ($action === 'edit' ? 'Edit Asset' : 'Add Asset') ?>
         </h1>
         <p class="admin-subtitle">
-            <a href="<?= BASE_URL ?>/admin.php?tab=assets" class="nav-link" style="display:inline;">&larr; Back to Asset Database</a>
+            <a href="<?= BASE_URL ?>/admin.php?tab=assets" class="back-link">&larr; Back to Asset Database</a>
         </p>
     </div>
 
@@ -134,7 +134,7 @@ require_once __DIR__ . '/../views/partials/header.php';
 
     <?php if ($action === 'delete'): ?>
 
-        <div class="card admin-delete-card" style="max-width:520px;margin:0 auto;">
+        <div class="card admin-delete-card admin-delete-card-centered">
             <h2 class="admin-form-title">Confirm Deletion</h2>
             <p class="admin-delete-text">
                 Are you sure you want to permanently remove <strong class="admin-delete-name"><?= htmlspecialchars($asset['item_name']) ?></strong>
@@ -152,7 +152,7 @@ require_once __DIR__ . '/../views/partials/header.php';
 
     <?php else: ?>
 
-        <div class="card admin-form-card" style="max-width:620px;margin:0 auto;">
+        <div class="card admin-form-card admin-form-card-centered">
             <h2 class="admin-form-title"><?= $action === 'edit' ? 'Edit Asset Details' : 'New Hardware Asset' ?></h2>
 
             <form class="admin-form" method="POST"

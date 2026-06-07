@@ -212,7 +212,7 @@ require_once __DIR__ . '/../views/partials/header.php';
 
 <?php if ($tab === 'assets'): ?>
 
-        <div class="card">
+        <div class="card admin-table-card">
             <div class="admin-assets-header">
                 <h2 class="admin-assets-title">Hardware Asset Database</h2>
                 <div class="admin-header-row">
@@ -301,7 +301,7 @@ require_once __DIR__ . '/../views/partials/header.php';
 
 <?php elseif ($tab === 'players'): ?>
 
-        <div class="card">
+        <div class="card admin-table-card">
             <div class="admin-assets-header">
                 <h2 class="admin-assets-title">Registered Operatives</h2>
                 <form class="admin-search-form" method="GET" action="<?= BASE_URL ?>/admin.php">
@@ -405,7 +405,7 @@ require_once __DIR__ . '/../views/partials/header.php';
             </div>
         <?php endif; ?>
 
-        <div class="card">
+        <div class="card admin-table-card">
             <div class="admin-assets-header">
                 <h2 class="admin-assets-title">Recent Game Sessions</h2>
                 <form class="admin-search-form" method="GET" action="<?= BASE_URL ?>/admin.php">

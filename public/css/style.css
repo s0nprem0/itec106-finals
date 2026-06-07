@@ -1242,6 +1242,13 @@ kbd {
     flex-direction: column;
 }
 
+.admin-table-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
 .admin-table-wrapper {
     flex: 1;
     overflow-y: auto;
@@ -1421,6 +1428,33 @@ kbd {
     margin-bottom: 1rem;
 }
 
+.admin-form-card-centered {
+    max-width: 620px;
+    margin: auto;
+    width: 100%;
+}
+
+.admin-delete-card-centered {
+    max-width: 520px;
+    margin: auto;
+    width: 100%;
+}
+
+.admin-asset-page {
+    justify-content: center;
+}
+
+.back-link {
+    display: inline;
+    font-size: 0.85rem;
+    color: var(--flat-blue);
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
 .admin-form-title {
     color: var(--flat-blue);
     margin-bottom: 0.75rem;
@@ -1501,7 +1535,7 @@ kbd {
 
 .admin-delete-card {
     margin-bottom: 1rem;
-    border-left: 3px solid var(--flat-red);
+    border-top: 3px solid var(--flat-red);
     flex-shrink: 0;
 }
 
