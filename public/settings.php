@@ -153,7 +153,6 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <input class="admin-form-input" type="date" id="birthdate" name="birthdate" required
                            value="<?= htmlspecialchars($_POST['birthdate'] ?? $user['birthdate']) ?>">
                 </div>
-                <div class="admin-form-group"></div>
             </div>
 
             <div class="settings-actions">
@@ -175,20 +174,19 @@ require_once __DIR__ . '/../views/partials/header.php';
             <div class="admin-form-row">
                 <div class="admin-form-group">
                     <label class="admin-form-label" for="current_password">Current Password</label>
-                    <input class="admin-form-input" type="password" id="current_password" name="current_password">
+                    <input class="admin-form-input" type="password" id="current_password" name="current_password" required>
                 </div>
                 <div class="admin-form-group">
                     <label class="admin-form-label" for="new_password">New Password</label>
-                    <input class="admin-form-input" type="password" id="new_password" name="new_password" minlength="6">
+                    <input class="admin-form-input" type="password" id="new_password" name="new_password" minlength="6" required title="At least 6 characters">
                 </div>
             </div>
 
             <div class="admin-form-row">
                 <div class="admin-form-group">
                     <label class="admin-form-label" for="confirm_password">Confirm New Password</label>
-                    <input class="admin-form-input" type="password" id="confirm_password" name="confirm_password" minlength="6">
+                    <input class="admin-form-input" type="password" id="confirm_password" name="confirm_password" minlength="6" required title="At least 6 characters">
                 </div>
-                <div class="admin-form-group"></div>
             </div>
 
             <div class="settings-actions">

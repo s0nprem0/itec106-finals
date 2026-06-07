@@ -96,7 +96,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <div class="game-result-item-name"><?= htmlspecialchars($lg['prev_item']) ?></div>
                     <div class="game-result-item-price">$<?= number_format($lg['prev_price'], 2) ?></div>
                 </div>
-                <div class="game-result-arrow"><?= $lg['guess'] === 'higher' ? '&rarr;' : '&larr;' ?></div>
+                <div class="game-result-arrow"><?= $lg['next_price'] > $lg['prev_price'] ? '&rarr;' : ($lg['next_price'] < $lg['prev_price'] ? '&larr;' : '&harr;') ?></div>
                 <div class="game-result-item">
                     <div class="game-result-item-name"><?= htmlspecialchars($lg['next_item']) ?></div>
                     <div class="game-result-item-price">$<?= number_format($lg['next_price'], 2) ?></div>
@@ -112,7 +112,7 @@ require_once __DIR__ . '/../views/partials/header.php';
             <p class="game-result-keys">Press <kbd>Enter</kbd> or <kbd>Space</kbd> to continue</p>
 
             <form method="POST" action="<?= BASE_URL ?>/game.php" id="form-continue">
-                <button type="submit" name="continue" value="1" class="btn btn-blue game-continue-btn">Continue</button>
+                <button type="submit" name="continue" value="1" class="btn btn-blue game-continue-btn" autofocus>Continue</button>
             </form>
         </div>
 

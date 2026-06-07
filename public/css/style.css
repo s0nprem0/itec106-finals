@@ -59,6 +59,11 @@ body {
     opacity: 0.85;
 }
 
+.btn:focus-visible {
+    outline: 2px solid var(--flat-blue);
+    outline-offset: 2px;
+}
+
 .btn-blue {
     background-color: var(--flat-blue);
     color: #fff;
@@ -104,7 +109,7 @@ input[type="date"] {
     top: 0;
     z-index: 100;
     background-color: var(--flat-surface);
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 2rem;
     border-bottom: 1px solid var(--flat-border);
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
@@ -147,6 +152,12 @@ input[type="date"] {
 
 .nav-link:hover {
     color: var(--flat-text);
+}
+
+.nav-link:focus-visible {
+    outline: 2px solid var(--flat-blue);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 .nav-link-active,
@@ -243,6 +254,12 @@ input[type="date"] {
     color: var(--flat-blue);
 }
 
+.nav-dropdown-item:focus-visible {
+    outline: 2px solid var(--flat-blue);
+    outline-offset: -2px;
+    border-radius: 4px;
+}
+
 .nav-dropdown-item-active {
     color: var(--flat-blue);
     font-weight: 600;
@@ -277,12 +294,17 @@ input[type="date"] {
    ============================================ */
 .site-footer {
     margin-top: auto;
-    text-align: center;
-    padding: 1.25rem;
     background-color: var(--flat-surface);
     color: var(--flat-subtext);
     font-size: 0.85rem;
     border-top: 1px solid var(--flat-border);
+}
+
+.site-footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem 2rem;
+    text-align: center;
 }
 
 /* ============================================
@@ -310,24 +332,26 @@ input[type="date"] {
     margin-bottom: 1.5rem;
 }
 
+.auth-error,
+.auth-success {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-left: 4px solid;
+}
+
 .auth-error {
     background-color: #fff5f5;
-    border: 1px solid var(--flat-red);
+    border-left-color: var(--flat-red);
     color: var(--flat-red);
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
 }
 
 .auth-success {
     background-color: #f0fff4;
-    border: 1px solid var(--flat-green);
+    border-left-color: var(--flat-green);
     color: var(--flat-green);
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
 }
 
 .auth-form {
@@ -336,7 +360,15 @@ input[type="date"] {
     gap: 0.75rem;
 }
 
-.auth-form .btn {
+.auth-form-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding-top: 0.5rem;
+}
+
+.auth-form .btn,
+.auth-form-actions .btn {
     margin-top: 0.5rem;
 }
 
@@ -366,8 +398,13 @@ input[type="date"] {
     cursor: pointer;
 }
 
-.auth-input {
-    width: 100%;
+input:where([type="text"], [type="email"], [type="password"], [type="date"], [type="number"]),
+select,
+textarea,
+.auth-input,
+.admin-search-input,
+.admin-price-input,
+.admin-form-input {
     padding: 0.65rem 0.75rem;
     border-radius: 6px;
     border: 1px solid var(--flat-input-border);
@@ -378,14 +415,30 @@ input[type="date"] {
     transition: border-color 0.15s ease;
 }
 
-.auth-input:focus {
+input:where([type="text"], [type="email"], [type="password"], [type="date"], [type="number"]):focus,
+select:focus,
+textarea:focus,
+.auth-input:focus,
+.admin-search-input:focus,
+.admin-price-input:focus,
+.admin-form-input:focus {
     border-color: var(--flat-blue);
     box-shadow: 0 0 0 2px rgba(9, 132, 227, 0.12);
 }
 
-.auth-input::placeholder {
+input:where([type="text"], [type="email"], [type="password"], [type="date"], [type="number"])::placeholder,
+select::placeholder,
+textarea::placeholder,
+.auth-input::placeholder,
+.admin-search-input::placeholder,
+.admin-price-input::placeholder,
+.admin-form-input::placeholder {
     color: var(--flat-subtext);
     opacity: 0.6;
+}
+
+.auth-input {
+    width: 100%;
 }
 
 .auth-footer {
@@ -416,10 +469,7 @@ input[type="date"] {
 .game-over-card {
     text-align: center;
     padding: 3.5rem 2rem;
-    border-left: 4px solid var(--flat-red);
-    border-top: 1px solid var(--flat-border);
-    border-right: 1px solid var(--flat-border);
-    border-bottom: 1px solid var(--flat-border);
+    border-top: 4px solid var(--flat-red);
 }
 
 .game-over-title {
@@ -455,9 +505,7 @@ input[type="date"] {
     margin-bottom: 1.5rem;
 }
 
-.game-over-keys kbd,
-.game-result-keys kbd,
-.game-instructions-keys kbd {
+kbd {
     display: inline-block;
     padding: 0.1rem 0.4rem;
     border-radius: 3px;
@@ -491,15 +539,15 @@ input[type="date"] {
     margin: 2rem auto;
     text-align: center;
     padding: 2.5rem 2rem;
-    border-left: 4px solid;
+    border-top: 4px solid;
 }
 
 .game-result-correct {
-    border-color: var(--flat-green);
+    border-top-color: var(--flat-green);
 }
 
 .game-result-incorrect {
-    border-color: var(--flat-red);
+    border-top-color: var(--flat-red);
 }
 
 .game-result-badge {
@@ -924,6 +972,13 @@ input[type="date"] {
 .lb-rank-1 {
     color: var(--flat-amber);
     font-weight: bold;
+    position: relative;
+}
+
+.lb-rank-1::after {
+    content: '\2605';
+    font-size: 0.85rem;
+    margin-left: 0.2rem;
 }
 
 .lb-rank-2 {
@@ -981,6 +1036,27 @@ input[type="date"] {
 /* ============================================
    Admin Panel
    ============================================ */
+.admin-header-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.admin-select-sm {
+    width: auto;
+    padding: 0.25rem 0.4rem;
+    font-size: 0.75rem;
+}
+
+.admin-td-center {
+    text-align: center;
+    color: var(--flat-subtext);
+}
+
+.admin-td-streak {
+    text-align: left;
+    font-size: 1rem;
+}
 .admin-page {
     max-width: 1100px;
     margin: 2rem auto 0;
@@ -1359,6 +1435,31 @@ input[type="date"] {
     color: var(--flat-text);
 }
 
+.profile-th-right {
+    text-align: right;
+}
+
+.profile-td-right {
+    text-align: right;
+    color: var(--flat-subtext);
+    font-size: 0.85rem;
+}
+
+.profile-role-player {
+    color: var(--flat-blue);
+    font-weight: 600;
+}
+
+.profile-role-moderator {
+    color: var(--flat-green);
+    font-weight: 600;
+}
+
+.profile-role-admin {
+    color: var(--flat-red);
+    font-weight: 600;
+}
+
 /* ============================================
    Profile Page
    ============================================ */
@@ -1503,13 +1604,42 @@ input[type="date"] {
     font-weight: 600;
 }
 
-.profile-recent-table {
+.profile-table {
     margin-top: 0.5rem;
 }
 
-.profile-recent-table th:last-child,
-.profile-recent-table td:last-child {
+.profile-table th:last-child,
+.profile-table td:last-child {
     text-align: right;
+}
+
+.profile-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.profile-table thead th {
+    padding: 1rem;
+    color: var(--flat-subtext);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid var(--flat-border);
+}
+
+.profile-table tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--flat-border);
+    vertical-align: middle;
+}
+
+.profile-table tbody tr:nth-child(even) {
+    background-color: #f8f9fb;
+}
+
+.profile-table tbody tr:hover {
+    background-color: #eff1f5;
 }
 
 .profile-no-data {

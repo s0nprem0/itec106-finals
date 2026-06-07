@@ -215,7 +215,7 @@ require_once __DIR__ . '/../views/partials/header.php';
         <div class="card">
             <div class="admin-assets-header">
                 <h2 class="admin-assets-title">Hardware Asset Database</h2>
-                <div style="display:flex;gap:0.5rem;align-items:center;">
+                <div class="admin-header-row">
                 <?php if ($has_create_perm): ?>
                     <a href="<?= BASE_URL ?>/admin_asset.php?action=add" class="btn btn-green admin-btn">+ Add Asset</a>
                 <?php endif; ?>
@@ -289,7 +289,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($assets)): ?>
-                        <tr><td class="admin-td" colspan="6" style="text-align:center;color:var(--flat-subtext);">
+                        <tr><td class="admin-td admin-td-center" colspan="6">
                             <?= $search ? 'No assets match your search.' : 'No assets in the database.' ?>
                         </td></tr>
                     <?php endif; ?>
@@ -356,14 +356,15 @@ require_once __DIR__ . '/../views/partials/header.php';
                             <td class="admin-td"><?= htmlspecialchars($p['email_addr']) ?></td>
                             <td class="admin-td">
                                 <?php if (hasPermission($pdo, 'players.edit') && $p['acct_id'] != $_SESSION['acct_id']): ?>
-                                <form method="POST" action="<?= BASE_URL ?>/admin.php?tab=players" style="display:flex;gap:0.25rem;align-items:center;">
+                                <form method="POST" action="<?= BASE_URL ?>/admin.php?tab=players" class="admin-price-form">
                                     <input type="hidden" name="action" value="update_role">
                                     <input type="hidden" name="target_id" value="<?= $p['acct_id'] ?>">
-                                    <select name="new_role" class="admin-price-input" style="width:auto;padding:0.25rem 0.4rem;font-size:0.75rem;" onchange="this.form.submit()">
+                                    <select name="new_role" class="admin-select-sm">
                                         <option value="player" <?= $p['role'] === 'player' ? 'selected' : '' ?>>player</option>
                                         <option value="moderator" <?= $p['role'] === 'moderator' ? 'selected' : '' ?>>moderator</option>
                                         <option value="admin" <?= $p['role'] === 'admin' ? 'selected' : '' ?>>admin</option>
                                     </select>
+                                    <button type="submit" class="btn btn-blue admin-btn">Save</button>
                                 </form>
                                 <?php else: ?>
                                 <span class="admin-category-badge"><?= htmlspecialchars($p['role']) ?></span>
@@ -373,7 +374,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($players)): ?>
-                        <tr><td class="admin-td" colspan="7" style="text-align:center;color:var(--flat-subtext);">
+                        <tr><td class="admin-td admin-td-center" colspan="7">
                             <?= $search ? 'No players match your search.' : 'No players registered yet.' ?>
                         </td></tr>
                     <?php endif; ?>
@@ -406,7 +407,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <form class="admin-search-form" method="GET" action="<?= BASE_URL ?>/admin.php">
                     <input type="hidden" name="tab" value="scores">
                     <input class="admin-search-input" type="text" name="search" placeholder="Search by player..." value="<?= htmlspecialchars($search) ?>">
-                    <select class="admin-search-input" name="difficulty" style="width:auto;">
+                    <select class="admin-select-sm" name="difficulty">
                         <option value="">All Difficulties</option>
                         <option value="easy" <?= $diff_filter === 'easy' ? 'selected' : '' ?>>Easy</option>
                         <option value="medium" <?= $diff_filter === 'medium' ? 'selected' : '' ?>>Medium</option>
@@ -453,7 +454,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         <tr>
                             <td class="admin-td admin-td-id">#<?= $s['id'] ?></td>
                             <td class="admin-td admin-item-name"><?= htmlspecialchars($s['username']) ?></td>
-                            <td class="admin-td lb-streak" style="text-align:left;font-size:1rem;"><?= $s['streak'] ?></td>
+                            <td class="admin-td lb-streak admin-td-streak"><?= $s['streak'] ?></td>
                             <td class="admin-td">
                                 <?php
                                 $diffClass = match($s['difficulty'] ?? 'medium') {
@@ -473,7 +474,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($scores)): ?>
-                        <tr><td class="admin-td" colspan="6" style="text-align:center;color:var(--flat-subtext);">No game data recorded yet.</td></tr>
+                        <tr><td class="admin-td admin-td-center" colspan="6">No game data recorded yet.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>

@@ -70,7 +70,6 @@ require_once __DIR__ . '/../views/partials/header.php';
                             <td class="lb-td lb-rank <?= $rankClass ?>">#<?= $rank ?></td>
                             <td class="lb-td lb-username">
                                 <?= htmlspecialchars($score['username']) ?>
-                                <?php if ($rank === 1): ?> 👑<?php endif; ?>
                             </td>
                             <td class="lb-td lb-streak"><?= $score['highest_streak'] ?></td>
                             <td class="lb-td"><span class="lb-diff-badge <?= $diffClass ?>"><?= htmlspecialchars(ucfirst($score['difficulty'] ?? 'medium')) ?></span></td>

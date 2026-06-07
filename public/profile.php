@@ -56,11 +56,6 @@ $initials = strtoupper(
 );
 
 $role_label = ucfirst($user['role']);
-$role_color = match($user['role']) {
-    'admin' => 'var(--flat-red)',
-    'moderator' => 'var(--flat-green)',
-    default => 'var(--flat-blue)',
-};
 
 require_once __DIR__ . '/../views/partials/header.php';
 ?>
@@ -72,7 +67,7 @@ require_once __DIR__ . '/../views/partials/header.php';
             <div class="profile-avatar"><?= htmlspecialchars($initials) ?></div>
             <div class="profile-header-info">
                 <h1 class="profile-name"><?= htmlspecialchars($user['username']) ?></h1>
-                <span class="profile-role" style="color:<?= $role_color ?>;"><?= $role_label ?></span>
+                <span class="profile-role profile-role-<?= $user['role'] ?>"><?= $role_label ?></span>
             </div>
             <div class="profile-header-actions">
                 <?php if ($is_own): ?>
@@ -103,7 +98,7 @@ require_once __DIR__ . '/../views/partials/header.php';
             </div>
             <div class="profile-detail">
                 <span class="profile-detail-label">Role</span>
-                <span class="profile-detail-value" style="color:<?= $role_color ?>;font-weight:600;"><?= $role_label ?></span>
+                <span class="profile-detail-value profile-role-<?= $user['role'] ?>"><?= $role_label ?></span>
             </div>
         </div>
     </div>
@@ -124,12 +119,12 @@ require_once __DIR__ . '/../views/partials/header.php';
 
         <?php if (!empty($recent_scores)): ?>
             <h3 class="profile-recent-title">Recent Sessions</h3>
-            <table class="admin-table profile-recent-table">
+            <table class="profile-table">
                 <thead>
                     <tr>
                         <th class="admin-th">Streak</th>
                         <th class="admin-th">Difficulty</th>
-                        <th class="admin-th" style="text-align:right;">Played At</th>
+                        <th class="admin-th profile-th-right">Played At</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,9 +137,9 @@ require_once __DIR__ . '/../views/partials/header.php';
                         };
                         ?>
                         <tr>
-                            <td class="admin-td lb-streak" style="text-align:left;"><?= (int)$s['streak'] ?></td>
+                            <td class="admin-td lb-streak admin-td-streak"><?= (int)$s['streak'] ?></td>
                             <td class="admin-td"><span class="lb-diff-badge <?= $dc ?>"><?= htmlspecialchars(ucfirst($s['difficulty'] ?? 'Medium')) ?></span></td>
-                            <td class="admin-td" style="text-align:right;color:var(--flat-subtext);font-size:0.85rem;"><?= date('M j, Y g:i A', strtotime($s['played_at'])) ?></td>
+                            <td class="admin-td profile-td-right"><?= date('M j, Y g:i A', strtotime($s['played_at'])) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
