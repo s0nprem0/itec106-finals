@@ -236,7 +236,6 @@ body {
 }
 
 .game-hud {
-.game-hud {
     display: flex;
     justify-content: space-between;
     background-color: var(--macchiato-surface);
@@ -391,4 +390,114 @@ body {
     padding: 0.85rem;
     font-size: 1.1rem;
     font-weight: 700;
+}
+
+/* ============================================
+   Leaderboard Page
+   ============================================ */
+.lb-page {
+    max-width: 800px;
+    margin: 3rem auto 0;
+}
+
+.lb-card {
+    padding: 2.5rem;
+}
+
+.lb-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.lb-title {
+    color: var(--macchiato-blue);
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.lb-subtitle {
+    color: var(--macchiato-subtext);
+    font-size: 0.95rem;
+}
+
+.lb-empty {
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--macchiato-base);
+    border-radius: 8px;
+    color: var(--macchiato-subtext);
+    font-size: 1.2rem;
+}
+
+.lb-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.lb-th {
+    text-align: left;
+    padding: 1rem;
+    color: var(--macchiato-subtext);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    border-bottom: 2px solid var(--macchiato-base);
+}
+
+.lb-th:last-child,
+.lb-td:last-child {
+    text-align: right;
+}
+
+.lb-tr {
+    border-bottom: 1px solid var(--macchiato-base);
+    transition: background-color 0.15s ease;
+}
+
+.lb-tr:hover {
+    background-color: rgba(138, 173, 244, 0.04);
+}
+
+.lb-td {
+    padding: 1rem;
+}
+
+.lb-rank {
+    font-weight: normal;
+    color: var(--macchiato-text);
+}
+
+.lb-rank-1 {
+    color: #eed49f;
+    font-weight: bold;
+}
+
+.lb-rank-2 {
+    color: var(--macchiato-subtext);
+    font-weight: bold;
+}
+
+.lb-rank-3 {
+    color: #f5a97f;
+    font-weight: bold;
+}
+
+.lb-username {
+    font-weight: 600;
+    color: var(--macchiato-text);
+}
+
+.lb-streak {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--macchiato-green);
+    text-align: right;
+}
+
+.lb-date {
+    color: var(--macchiato-subtext);
+    font-size: 0.85rem;
+    text-align: right;
 }
