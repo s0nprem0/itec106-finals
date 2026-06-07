@@ -105,11 +105,11 @@ $diffClass = match($diff) {
             <span class="game-bet-dollar">$</span>
             <input class="game-bet-input" type="number" id="bet-amount" name="bet" step="0.01" min="1" max="<?= $max_bet ?>" value="<?= min(500, $max_bet) ?>" required>
         </div>
-        <div class="game-bet-presets">
-            <button type="button" class="btn btn-sm game-bet-preset" data-amount="100">$100</button>
-            <button type="button" class="btn btn-sm game-bet-preset" data-amount="500">$500</button>
-            <button type="button" class="btn btn-sm game-bet-preset" data-amount="1000">$1k</button>
-            <button type="button" class="btn btn-sm game-bet-preset game-bet-allin" data-amount="<?= $max_bet ?>">Max (25%)</button>
+    <div class="game-bet-presets">
+            <button type="button" class="btn btn-sm game-bet-preset" data-action="add" data-value="100">+$100</button>
+            <button type="button" class="btn btn-sm game-bet-preset" data-action="add" data-value="500">+$500</button>
+            <button type="button" class="btn btn-sm game-bet-preset" data-action="multiply" data-value="0.5">1/2</button>
+            <button type="button" class="btn btn-sm game-bet-preset game-bet-allin" data-action="set" data-value="<?= $max_bet ?>">Max</button>
         </div>
     </div>
 
@@ -170,7 +170,23 @@ $diffClass = match($diff) {
     
 
     document.querySelectorAll('.game-bet-preset').forEach(function(p) {
-        p.addEventListener('click', function() { updateBet(parseFloat(this.dataset.amount) || 0); });
+        p.addEventListener('click', function() {
+            var action = this.dataset.action;
+            var value = parseFloat(this.dataset.value) || 0;
+            var currentBet = parseFloat(input.value) || 0;
+
+            switch (action) {
+                case 'add':
+                    updateBet(currentBet + value);
+                    break;
+                case 'multiply':
+                    updateBet(currentBet * value);
+                    break;
+                case 'set':
+                    updateBet(value);
+                    break;
+            }
+        });
     });
 
     document.addEventListener('keydown', function(e) {
