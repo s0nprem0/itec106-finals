@@ -119,6 +119,7 @@ require_once __DIR__ . '/../views/partials/header.php';
 
         <?php if (!empty($recent_scores)): ?>
             <h3 class="profile-recent-title">Recent Sessions</h3>
+            <div class="profile-table-wrapper">
             <table class="profile-table">
                 <thead>
                     <tr>
@@ -144,6 +145,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
         <?php else: ?>
             <p class="profile-no-data">No game sessions recorded yet.</p>
         <?php endif; ?>

@@ -21,10 +21,15 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
+html,
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
 body {
     background-color: var(--flat-bg);
     color: var(--flat-text);
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
@@ -32,14 +37,19 @@ body {
 .container {
     flex: 1;
     max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem 2rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .card {
     background-color: var(--flat-surface);
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 1.25rem;
     border: 1px solid var(--flat-border);
 }
 
@@ -105,11 +115,9 @@ input[type="date"] {
    Site Header / Navigation
    ============================================ */
 .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    flex-shrink: 0;
     background-color: var(--flat-surface);
-    padding: 0.75rem 2rem;
+    padding: 0.5rem 2rem;
     border-bottom: 1px solid var(--flat-border);
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
@@ -293,17 +301,17 @@ input[type="date"] {
    Site Footer
    ============================================ */
 .site-footer {
-    margin-top: auto;
+    flex-shrink: 0;
     background-color: var(--flat-surface);
     color: var(--flat-subtext);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     border-top: 1px solid var(--flat-border);
 }
 
 .site-footer-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.25rem 2rem;
+    padding: 0.6rem 2rem;
     text-align: center;
 }
 
@@ -312,12 +320,20 @@ input[type="date"] {
    ============================================ */
 .auth-container {
     max-width: 380px;
-    margin: 5rem auto;
+    margin: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .auth-container-narrow {
     max-width: 520px;
-    margin: 4rem auto;
+    margin: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .auth-card {
@@ -326,10 +342,10 @@ input[type="date"] {
 
 .auth-title {
     color: var(--flat-text);
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .auth-error,
@@ -463,27 +479,34 @@ textarea::placeholder,
    ============================================ */
 .game-page {
     max-width: 1000px;
+    width: 100%;
     margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 0;
 }
 
 .game-over-card {
     text-align: center;
-    padding: 3.5rem 2rem;
+    padding: 2rem 1.5rem;
     border-top: 4px solid var(--flat-red);
 }
 
 .game-over-title {
     color: var(--flat-red);
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    margin-bottom: 0.25rem;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .game-over-score {
     color: var(--flat-text);
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
     font-weight: 600;
 }
 
@@ -493,16 +516,16 @@ textarea::placeholder,
 
 .game-over-record {
     color: var(--flat-amber);
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: bold;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.25rem;
     letter-spacing: 1px;
 }
 
 .game-over-keys {
     color: var(--flat-subtext);
-    font-size: 0.8rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
 kbd {
@@ -518,27 +541,27 @@ kbd {
 
 .game-over-desc {
     color: var(--flat-subtext);
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
 }
 
 .game-over-actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .game-over-btn {
-    font-size: 1rem;
-    padding: 0.8rem 1.5rem;
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
 }
 
 .game-result-card {
-    max-width: 520px;
-    margin: 2rem auto;
+    max-width: 440px;
+    margin: 0 auto;
     text-align: center;
-    padding: 2.5rem 2rem;
+    padding: 1.5rem;
     border-top: 4px solid;
 }
 
@@ -551,9 +574,9 @@ kbd {
 }
 
 .game-result-badge {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     font-weight: bold;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.15rem;
 }
 
 .game-result-correct .game-result-badge {
@@ -565,11 +588,11 @@ kbd {
 }
 
 .game-result-verdict {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
 }
 
 .game-result-correct .game-result-verdict {
@@ -584,44 +607,44 @@ kbd {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .game-result-item {
     flex: 1;
-    max-width: 180px;
+    max-width: 160px;
     background-color: var(--flat-bg);
     border-radius: 8px;
-    padding: 0.75rem;
+    padding: 0.5rem;
 }
 
 .game-result-item-name {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--flat-subtext);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.15rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .game-result-item-price {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--flat-blue);
 }
 
 .game-result-arrow {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: var(--flat-subtext);
     flex-shrink: 0;
 }
 
 .game-result-detail {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--flat-subtext);
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
 }
 
 .game-result-detail strong {
@@ -630,65 +653,65 @@ kbd {
 
 .game-result-keys {
     color: var(--flat-subtext);
-    font-size: 0.75rem;
-    margin-bottom: 1rem;
+    font-size: 0.7rem;
+    margin-bottom: 0.5rem;
 }
 
 
 .game-continue-btn {
-    padding: 0.75rem 2rem;
-    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
 }
 
 .game-start-card {
     text-align: center;
-    padding: 3.5rem 2rem;
-    max-width: 600px;
-    margin: 2rem auto;
+    padding: 2rem 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
     border-top: 3px solid var(--flat-blue);
 }
 
 .game-start-title {
     color: var(--flat-blue);
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .game-start-desc {
     color: var(--flat-subtext);
-    margin-bottom: 2rem;
-    font-size: 0.9rem;
-    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
 .game-diff-form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .game-diff-label {
     color: var(--flat-subtext);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
 
 .game-diff-options {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .game-diff-btn {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    min-width: 140px;
+    min-width: 120px;
 }
 
 .game-hud {
@@ -696,27 +719,28 @@ kbd {
     justify-content: space-between;
     background-color: var(--flat-surface);
     border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 0.4rem 1rem;
+    margin-bottom: 0.75rem;
     border: 1px solid var(--flat-border);
+    flex-shrink: 0;
 }
 
 .game-hud-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.15rem;
+    gap: 0.1rem;
 }
 
 .game-hud-label {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--flat-subtext);
 }
 
 .game-hud-value {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--flat-text);
 }
@@ -726,9 +750,9 @@ kbd {
 }
 
 .game-hud-diff {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    padding: 0.2rem 0.6rem;
+    padding: 0.15rem 0.4rem;
     border-radius: 4px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -767,11 +791,12 @@ kbd {
     background-color: #ebf8ff;
     border-left: 3px solid var(--flat-blue);
     border-radius: 6px;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1.5rem;
-    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
     color: var(--flat-subtext);
-    line-height: 1.5;
+    line-height: 1.4;
+    flex-shrink: 0;
 }
 
 .game-instructions-content strong {
@@ -780,8 +805,8 @@ kbd {
 
 .game-instructions-keys {
     display: block;
-    margin-top: 0.5rem;
-    font-size: 0.8rem;
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
     color: var(--flat-subtext);
 }
 
@@ -790,61 +815,65 @@ kbd {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 0.75rem;
+    flex: 1;
+    justify-content: center;
+    min-height: 0;
 }
 
 .game-asset-card {
     width: 100%;
-    max-width: 440px;
+    max-width: 420px;
     text-align: center;
-    padding: 2rem;
+    padding: 1.25rem;
     border-top: 3px solid var(--flat-blue);
+    flex-shrink: 0;
 }
 
 .game-img {
-    max-height: 180px;
+    max-height: 120px;
     width: auto;
     border-radius: 8px;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.5rem;
     object-fit: contain;
 }
 
 .game-img-placeholder {
     width: 100%;
-    height: 140px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--flat-bg);
     border-radius: 8px;
-    margin-bottom: 1.25rem;
-}
-
-.game-asset-name {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--flat-text);
     margin-bottom: 0.5rem;
 }
 
+.game-asset-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--flat-text);
+    margin-bottom: 0.25rem;
+}
+
 .game-price {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--flat-blue);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .game-asset-meta {
     display: flex;
     justify-content: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
 }
 
 .game-volatility {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 0.25rem 0.6rem;
+    padding: 0.2rem 0.5rem;
     border-radius: 4px;
 }
 
@@ -859,30 +888,32 @@ kbd {
 }
 
 .game-category {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--flat-subtext);
     background-color: var(--flat-bg);
-    padding: 0.25rem 0.6rem;
+    padding: 0.2rem 0.5rem;
     border-radius: 4px;
 }
 
 .game-prompt {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--flat-subtext);
     text-align: center;
+    flex-shrink: 0;
 }
 
 .game-actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     width: 100%;
-    max-width: 440px;
+    max-width: 420px;
+    flex-shrink: 0;
 }
 
 .game-btn {
     flex: 1;
-    padding: 0.85rem;
-    font-size: 1.1rem;
+    padding: 0.65rem;
+    font-size: 1rem;
     font-weight: 700;
 }
 
@@ -891,30 +922,40 @@ kbd {
    ============================================ */
 .lb-page {
     max-width: 800px;
-    margin: 3rem auto 0;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .lb-card {
-    padding: 2.5rem;
+    padding: 1.25rem;
     border-top: 3px solid var(--flat-amber);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .lb-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
 }
 
 .lb-title {
     color: var(--flat-text);
-    font-size: 2rem;
+    font-size: 1.4rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .lb-subtitle {
     color: var(--flat-subtext);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .lb-empty {
@@ -926,20 +967,30 @@ kbd {
     font-size: 1.1rem;
 }
 
+.lb-table-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    margin-top: 0.5rem;
+}
+
 .lb-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
 }
 
 .lb-th {
     text-align: left;
-    padding: 1rem;
+    padding: 0.75rem;
     color: var(--flat-subtext);
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     letter-spacing: 0.04em;
     border-bottom: 2px solid var(--flat-border);
+    position: sticky;
+    top: 0;
+    background-color: var(--flat-surface);
+    z-index: 1;
 }
 
 .lb-th:last-child,
@@ -961,7 +1012,7 @@ kbd {
 }
 
 .lb-td {
-    padding: 1rem;
+    padding: 0.6rem 0.75rem;
 }
 
 .lb-rank {
@@ -977,8 +1028,8 @@ kbd {
 
 .lb-rank-1::after {
     content: '\2605';
-    font-size: 0.85rem;
-    margin-left: 0.2rem;
+    font-size: 0.75rem;
+    margin-left: 0.15rem;
 }
 
 .lb-rank-2 {
@@ -997,7 +1048,7 @@ kbd {
 }
 
 .lb-streak {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
     color: var(--flat-green);
     text-align: right;
@@ -1005,7 +1056,7 @@ kbd {
 
 .lb-date {
     color: var(--flat-subtext);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     text-align: right;
 }
 
@@ -1059,33 +1110,41 @@ kbd {
 }
 .admin-page {
     max-width: 1100px;
-    margin: 2rem auto 0;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .admin-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
 }
 
 .admin-title {
     color: var(--flat-red);
-    font-size: 2.2rem;
+    font-size: 1.6rem;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .admin-subtitle {
     color: var(--flat-subtext);
-    margin-top: 0.25rem;
+    margin-top: 0.15rem;
+    font-size: 0.85rem;
 }
 
 .admin-msg {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     border-radius: 8px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     border-left: 4px solid;
+    flex-shrink: 0;
 }
 
 .admin-msg-success {
@@ -1102,14 +1161,15 @@ kbd {
 
 .admin-stats {
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
     flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 .admin-stat {
     flex: 1;
-    min-width: 200px;
+    min-width: 150px;
     text-align: center;
     border-top: 3px solid;
 }
@@ -1132,14 +1192,14 @@ kbd {
 
 .admin-stat-label {
     color: var(--flat-subtext);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.15rem;
 }
 
 .admin-stat-value {
-    font-size: 2.2rem;
+    font-size: 1.6rem;
     font-weight: bold;
     color: var(--flat-text);
 }
@@ -1147,8 +1207,9 @@ kbd {
 .admin-tabs {
     display: flex;
     gap: 0;
-    margin-bottom: 2rem;
+    margin-bottom: 0.75rem;
     border-bottom: 2px solid var(--flat-border);
+    flex-shrink: 0;
 }
 
 .admin-tab {
@@ -1174,7 +1235,24 @@ kbd {
 }
 
 .admin-tab-content {
-    min-height: 200px;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-table-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.admin-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: var(--flat-surface);
+    z-index: 2;
 }
 
 .admin-assets-header {
@@ -1182,8 +1260,9 @@ kbd {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
 }
 
 .admin-assets-header .admin-assets-title {
@@ -1192,8 +1271,8 @@ kbd {
 
 .admin-assets-title {
     color: var(--flat-blue);
-    margin-bottom: 1.5rem;
-    font-size: 1.15rem;
+    margin-bottom: 0;
+    font-size: 1rem;
 }
 
 .admin-search-form {
@@ -1210,7 +1289,7 @@ kbd {
     color: var(--flat-text);
     font-size: 0.85rem;
     outline: none;
-    width: 220px;
+    width: 200px;
     transition: border-color 0.15s ease;
 }
 
@@ -1226,8 +1305,9 @@ kbd {
 
 .admin-search-count {
     color: var(--flat-subtext);
-    font-size: 0.8rem;
-    margin-bottom: 1rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
 }
 
 .admin-th-sortable {
@@ -1260,9 +1340,9 @@ kbd {
 }
 
 .admin-th {
-    padding: 1rem;
+    padding: 0.6rem 0.75rem;
     color: var(--flat-subtext);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     border-bottom: 2px solid var(--flat-border);
@@ -1273,7 +1353,7 @@ kbd {
 }
 
 .admin-td {
-    padding: 1rem;
+    padding: 0.5rem 0.75rem;
     border-bottom: 1px solid var(--flat-border);
     vertical-align: middle;
 }
@@ -1333,40 +1413,40 @@ kbd {
 }
 
 .admin-btn {
-    padding: 0.45rem 1rem;
-    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
 }
 
 .admin-form-card {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .admin-form-title {
     color: var(--flat-blue);
-    margin-bottom: 1.25rem;
-    font-size: 1.05rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
 }
 
 .admin-form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
 .admin-form-row {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
 .admin-form-group {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.25rem;
 }
 
 .admin-form-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     color: var(--flat-subtext);
     text-transform: uppercase;
@@ -1393,19 +1473,19 @@ kbd {
     display: flex;
     gap: 0.75rem;
     align-items: center;
-    padding-top: 0.5rem;
+    padding-top: 0.25rem;
 }
 
 .admin-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.35rem;
     flex-wrap: nowrap;
 }
 
 .admin-img-thumb {
-    width: 44px;
-    height: 44px;
-    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
     object-fit: cover;
     display: block;
     border: 1px solid var(--flat-border);
@@ -1420,15 +1500,16 @@ kbd {
 }
 
 .admin-delete-card {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     border-left: 3px solid var(--flat-red);
+    flex-shrink: 0;
 }
 
 .admin-delete-text {
     color: var(--flat-subtext);
-    margin-bottom: 1.25rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
 .admin-delete-name {
@@ -1465,33 +1546,39 @@ kbd {
    ============================================ */
 .profile-page {
     max-width: 800px;
-    margin: 2rem auto 0;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .profile-card {
     border-top: 3px solid var(--flat-blue);
-    margin-bottom: 2rem;
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
 }
 
 .profile-header {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--flat-border);
 }
 
 .profile-avatar {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background-color: var(--flat-blue);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: 700;
     flex-shrink: 0;
 }
@@ -1501,12 +1588,12 @@ kbd {
 }
 
 .profile-name {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: var(--flat-text);
 }
 
 .profile-role {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-weight: 600;
@@ -1519,13 +1606,13 @@ kbd {
 .profile-details {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .profile-detail {
     display: flex;
-    gap: 1rem;
-    padding-bottom: 0.75rem;
+    gap: 0.75rem;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--flat-bg);
 }
 
@@ -1569,18 +1656,24 @@ kbd {
 
 .profile-stats-card {
     border-top: 3px solid var(--flat-green);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .profile-stats-title {
     color: var(--flat-blue);
-    font-size: 1.15rem;
-    margin-bottom: 1rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
 }
 
 .profile-stats {
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
 }
 
 .profile-stat {
@@ -1599,18 +1692,16 @@ kbd {
 
 .profile-recent-title {
     color: var(--flat-text);
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
     font-weight: 600;
+    flex-shrink: 0;
 }
 
-.profile-table {
-    margin-top: 0.5rem;
-}
-
-.profile-table th:last-child,
-.profile-table td:last-child {
-    text-align: right;
+.profile-table-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .profile-table {
@@ -1620,16 +1711,20 @@ kbd {
 }
 
 .profile-table thead th {
-    padding: 1rem;
+    padding: 0.6rem 0.75rem;
     color: var(--flat-subtext);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     border-bottom: 2px solid var(--flat-border);
+    position: sticky;
+    top: 0;
+    background-color: var(--flat-surface);
+    z-index: 1;
 }
 
 .profile-table tbody td {
-    padding: 1rem;
+    padding: 0.5rem 0.75rem;
     border-bottom: 1px solid var(--flat-border);
     vertical-align: middle;
 }
@@ -1642,13 +1737,19 @@ kbd {
     background-color: #eff1f5;
 }
 
+.profile-table th:last-child,
+.profile-table td:last-child {
+    text-align: right;
+}
+
 .profile-no-data {
     color: var(--flat-subtext);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-align: center;
-    padding: 2rem;
+    padding: 1.5rem;
     background-color: var(--flat-bg);
     border-radius: 8px;
+    flex-shrink: 0;
 }
 
 .profile-view-link {
@@ -1666,47 +1767,52 @@ kbd {
    ============================================ */
 .settings-page {
     max-width: 620px;
-    margin: 2rem auto 0;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .settings-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
 }
 
 .settings-title {
     color: var(--flat-text);
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .settings-subtitle {
     color: var(--flat-subtext);
-    margin-top: 0.25rem;
-    font-size: 0.9rem;
+    margin-top: 0.15rem;
+    font-size: 0.85rem;
 }
 
 .settings-card {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     border-top: 3px solid var(--flat-blue);
 }
 
 .settings-card-title {
     color: var(--flat-blue);
-    margin-bottom: 1.25rem;
-    font-size: 1.05rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
 }
 
 .settings-form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
 .settings-actions {
     display: flex;
     gap: 0.75rem;
     align-items: center;
-    padding-top: 0.5rem;
+    padding-top: 0.25rem;
 }

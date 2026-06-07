@@ -233,6 +233,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <p class="admin-search-count"><?= count($assets) ?> result(s) for "<?= htmlspecialchars($search) ?>"</p>
             <?php endif; ?>
 
+            <div class="admin-table-wrapper">
             <table class="admin-table">
                 <thead>
                     <tr>
@@ -295,6 +296,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <?php endif; ?>
                 </tbody>
             </table>
+            </div>
         </div>
 
 <?php elseif ($tab === 'players'): ?>
@@ -316,6 +318,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <p class="admin-search-count"><?= count($players) ?> result(s) for "<?= htmlspecialchars($search) ?>"</p>
             <?php endif; ?>
 
+            <div class="admin-table-wrapper">
             <table class="admin-table">
                 <thead>
                     <tr>
@@ -380,6 +383,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <?php endif; ?>
                 </tbody>
             </table>
+            </div>
         </div>
 
 <?php elseif ($tab === 'scores'): ?>
@@ -424,6 +428,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 <p class="admin-search-count"><?= count($scores) ?> result(s) found</p>
             <?php endif; ?>
 
+            <div class="admin-table-wrapper">
             <table class="admin-table">
                 <thead>
                     <tr>
@@ -478,6 +483,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <?php endif; ?>
                 </tbody>
             </table>
+            </div>
         </div>
 
 <?php endif; ?>

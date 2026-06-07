@@ -41,6 +41,7 @@ require_once __DIR__ . '/../views/partials/header.php';
         <?php if (empty($top_scores)): ?>
             <div class="lb-empty">No performance data logged in the mainframe yet.</div>
         <?php else: ?>
+            <div class="lb-table-wrapper">
             <table class="lb-table">
                 <thead>
                     <tr>
@@ -79,6 +80,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
         <?php endif; ?>
 
     </div>
