@@ -45,6 +45,9 @@ try {
     $best_streak = 0;
 }
 
+$is_new_record = !empty($_SESSION['is_new_record']);
+unset($_SESSION['is_new_record']);
+
 require_once __DIR__ . '/../views/partials/header.php';
 ?>
 
@@ -59,7 +62,7 @@ require_once __DIR__ . '/../views/partials/header.php';
                 Final Intelligence Streak: <span class="game-over-streak"><?= $_SESSION['score'] ?></span>
             </h2>
 
-            <?php if ($best_streak > 0 && $_SESSION['score'] >= $best_streak): ?>
+            <?php if ($is_new_record): ?>
                 <p class="game-over-record">&#9733; New Personal Record! &#9733;</p>
             <?php endif; ?>
 

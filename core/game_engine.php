@@ -49,8 +49,8 @@ function processGuess($pdo, $guess, $acctId) {
     $currentPrice = $_SESSION['current_asset']['current_price'];
     $nextPrice = $_SESSION['next_asset']['current_price'];
 
-    $isHigher = $nextPrice >= $currentPrice;
-    $isLower = $nextPrice <= $currentPrice;
+    $isHigher = $nextPrice > $currentPrice;
+    $isLower = $nextPrice < $currentPrice;
 
     $_SESSION['last_guess'] = [
         'prev_item' => $_SESSION['current_asset']['item_name'],
@@ -70,8 +70,12 @@ function processGuess($pdo, $guess, $acctId) {
 
     if ($_SESSION['lives'] <= 0) {
         $_SESSION['game_over'] = true;
+        $stmt2 = $pdo->prepare("SELECT COALESCE(MAX(streak), 0) FROM scores WHERE acct_id = ?");
+        $stmt2->execute([$acctId]);
+        $prev_best = (int)$stmt2->fetchColumn();
         $stmt = $pdo->prepare("INSERT INTO scores (acct_id, streak, difficulty) VALUES (?, ?, ?)");
         $stmt->execute([$acctId, $_SESSION['score'], $_SESSION['difficulty'] ?? 'medium']);
+        $_SESSION['is_new_record'] = $_SESSION['score'] > $prev_best;
     } else {
         $_SESSION['current_asset'] = $_SESSION['next_asset'];
         $_SESSION['next_asset'] = getRandomAsset($pdo, $_SESSION['current_asset']['id'], $config['volatility']);

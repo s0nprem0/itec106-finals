@@ -43,7 +43,6 @@ $diffClass = match($diff) {
     </div>
 </div>
 
-<?php if ($round === 1): ?>
 <div class="game-instructions">
     <div class="game-instructions-content">
         <strong>How to Play:</strong> You'll see a hardware item with a price. Guess whether the <em>next</em> item will cost <strong>higher</strong> or <strong>lower</strong>. Correct guesses extend your streak. Three wrong guesses and it's game over.
@@ -51,7 +50,6 @@ $diffClass = match($diff) {
         <span class="game-instructions-keys">Keyboard: <kbd>H</kbd> Higher &middot; <kbd>L</kbd> Lower</span>
     </div>
 </div>
-<?php endif; ?>
 
 <div class="game-board">
     <div class="card game-asset-card">
